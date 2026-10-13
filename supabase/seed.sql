@@ -5,8 +5,10 @@
 --
 -- Semua isi di sini dummy. Ganti sebelum rilis lewat panel admin: nama dan
 -- harga produk, deskripsi, tambahan harga bahan dan ukuran, tabel ukuran,
--- tarif ongkir, dan nama zona antar langsung. Foto memakai picsum.photos
--- (URL penuh); foto asli nanti diunggah admin ke bucket product-photos.
+-- tarif ongkir, dan nama zona antar langsung.
+-- Foto memakai berkas lokal di public/product-photos (path web /product-photos/...)
+-- atau kunci objek di bucket Supabase Storage "product-photos". Taruh foto asli
+-- dengan nama berkas yang cocok dengan nilai di kolom photos.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -41,9 +43,17 @@ select
   v.material_info,
   v.base_price,
   array[
-    'https://picsum.photos/seed/' || v.slug || '-1/800/1000',
-    'https://picsum.photos/seed/' || v.slug || '-2/800/1000',
-    'https://picsum.photos/seed/' || v.slug || '-3/800/1000'
+    case v.slug
+      when 'gamis-katun-harian' then '/product-photos/Gamis1.jpg'
+      when 'gamis-linen-santai' then '/product-photos/Gamis2.jpg'
+      when 'gamis-polos-classic' then '/product-photos/Gamis3.jpg'
+      when 'gamis-toyobo-acara' then '/product-photos/Gamis4.jpg'
+      when 'gamis-bordir-kerah' then '/product-photos/Gamis5.jpg'
+      when 'gamis-pernikahan-premium' then '/product-photos/Gamis6.jpg'
+      when 'gamis-seragam-kantor' then '/product-photos/Gamis7.jpg'
+      when 'gamis-seragam-pengajian' then '/product-photos/Gamis8.jpg'
+      else '/product-photos/Gamis.jpg'
+    end
   ],
   chart.c,
   v.lead_time_days

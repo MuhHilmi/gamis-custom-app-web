@@ -10,9 +10,8 @@ const nextConfig = {
   partialPrefetching: true,
   images: {
     remotePatterns: [
-      // Foto dummy sementara. Picsum mengalihkan ke fastly.picsum.photos.
-      { protocol: "https", hostname: "picsum.photos" },
-      { protocol: "https", hostname: "fastly.picsum.photos" },
+      // Foto Supabase Storage (bucket product-photos). Foto lokal di public/
+      // tidak perlu remotePatterns.
       ...(supabaseHost
         ? [
             {
