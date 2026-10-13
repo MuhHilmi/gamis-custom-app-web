@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/* Token tema zaitun dan krem (lihat UI_UX_SPEC.md bagian 1).
+   Emas (#B8893B) hanya untuk hiasan: kontrasnya gagal untuk teks. */
+@theme {
+  --color-zaitun: #2f4a3a;
+  --color-zaitun-hover: #243a2d;
+  --color-zaitun-muda: #dce5da;
+  --color-krem: #f7f2e8;
+  --color-krem-tua: #e6dcc6;
+  --color-teks: #1f2a24;
+  --color-teks-sekunder: #5c6a60;
+  --color-emas: #b8893b;
+  --color-emas-tua: #7a5a1e;
+  --color-garis-input: #6f7a6c;
+  --color-garis: #cfc4a8;
+  --color-merah: #9b2c2c;
+  --color-merah-bg: #f6dedc;
+  --color-ok: #2f6b45;
+  --color-ok-bg: #ddebdd;
+  --color-peringatan: #6b4a0e;
+  --color-peringatan-bg: #f5e6c4;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-lora), Georgia, serif;
+}
+
+/* Hanya tema terang di MVP. */
+html {
+  background-color: var(--color-krem);
+}
+
+body {
+  background-color: var(--color-krem);
+  color: var(--color-teks);
+  font-family: var(--font-sans);
+  font-size: 16px; /* di bawah 16px iOS memperbesar layar saat input difokus */
+  line-height: 1.5;
+}
+
+/* Angka harga sejajar. */
+.harga {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+/* Cincin fokus selalu terlihat. */
+:focus-visible {
+  outline: 3px solid var(--color-zaitun);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
