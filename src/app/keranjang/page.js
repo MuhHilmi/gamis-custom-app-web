@@ -134,6 +134,11 @@ export default function CartPage() {
                 <p className="mt-1 text-xs leading-relaxed text-teks-sekunder">
                   {item.size} · {item.material} · {item.color}
                 </p>
+                {item.customNote || item.note ? (
+                  <p className="mt-1 text-xs italic text-teks-sekunder">
+                    Catatan: {item.customNote || item.note}
+                  </p>
+                ) : null}
 
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-col gap-1">

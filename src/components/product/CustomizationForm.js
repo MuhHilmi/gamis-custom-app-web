@@ -23,6 +23,7 @@ export default function CustomizationForm({ product, options = [] }) {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  const [customNote, setCustomNote] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [toast, setToast] = useState(null);
 
@@ -203,9 +204,28 @@ export default function CustomizationForm({ product, options = [] }) {
         </fieldset>
       ) : null}
 
+      {/* Catatan kustom */}
+      <fieldset>
+        <legend className="font-serif text-base font-semibold">4. Catatan (opsional)</legend>
+        <label className="mt-2 block">
+          <span className="sr-only">Catatan kustom</span>
+          <textarea
+            value={customNote}
+            onChange={(event) => setCustomNote(event.target.value)}
+            rows={3}
+            maxLength={300}
+            placeholder="Contoh: panjang tangan +2 cm, tanpa kantong, dll."
+            className="block w-full rounded-lg border border-garis-input bg-putih px-4 py-3 text-sm text-teks focus:border-zaitun focus:outline-none"
+          />
+        </label>
+        <p className="mt-1 text-xs text-teks-sekunder">
+          {customNote.trim().length}/300 karakter.
+        </p>
+      </fieldset>
+
       {/* Jumlah */}
       <fieldset>
-        <legend className="font-serif text-base font-semibold">4. Jumlah</legend>
+        <legend className="font-serif text-base font-semibold">5. Jumlah</legend>
         <div className="mt-2 inline-flex items-center overflow-hidden rounded-lg border border-garis-input bg-putih">
           <button
             type="button"
