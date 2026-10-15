@@ -115,7 +115,7 @@ export async function GET(request) {
 
   const { data: order } = await supabase
     .from("orders")
-    .select("code, midtrans_order_id, status, total")
+    .select("id, code, midtrans_order_id, status, total")
     .or(`code.eq.${orderId},midtrans_order_id.eq.${orderId}`)
     .maybeSingle();
 

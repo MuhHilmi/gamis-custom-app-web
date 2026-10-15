@@ -14,11 +14,15 @@ async function requireAdmin() {
   return supabase;
 }
 
-export async function updateOrder(formData) {
-  const supabase = await requireAdmin();
+export async function updateOrder(prevState, formData) {
+  const supabase = await createClient();
+  const { data: claimsData } = await supabase.auth.getClaims();
+  if (!claimsData?.claims) return { error: "Belum login" };
+  const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin");
+  if (adminError || isAdmin !== true) return { error: "Bukan admin" };
 
   const orderId = String(formData.get("orderId") || "").trim();
-  if (!orderId) throw new Error("ID pesanan kosong");
+  if (!orderId) return { error: "ID pesanan kosong" };
 
   const nextStatus = String(formData.get("status") || "").trim();
   const courier = String(formData.get("courier") || "").trim() || null;
@@ -30,14 +34,14 @@ export async function updateOrder(formData) {
     .eq("id", orderId)
     .maybeSingle();
 
-  if (findError || !order) throw new Error("Pesanan tidak ditemukan");
+  if (findError || !order) return { error: "Pesanan tidak ditemukan" };
 
   const updates = { courier, tracking_number: trackingNumber };
 
   if (nextStatus && nextStatus !== order.status) {
     const allowed = ADMIN_TRANSITIONS[order.status] || [];
     if (!allowed.includes(nextStatus)) {
-      throw new Error("Transisi status tidak diizinkan");
+      return { error: "Transisi status tidak diizinkan" };
     }
     updates.status = nextStatus;
   }
@@ -47,7 +51,7 @@ export async function updateOrder(formData) {
     .update(updates)
     .eq("id", orderId);
 
-  if (updateError) throw new Error("Gagal memperbarui pesanan");
+  if (updateError) return { error: "Gagal memperbarui pesanan" };
 
   if (updates.status) {
     await sendStatusChangedEmail({
@@ -61,4 +65,6 @@ export async function updateOrder(formData) {
 
   revalidatePath(`/admin/pesanan/${orderId}`);
   revalidatePath("/admin/pesanan");
+
+  return { ok: true, message: "Perubahan tersimpan." };
 }

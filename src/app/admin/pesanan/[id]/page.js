@@ -3,8 +3,9 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatRupiah, formatTanggalWaktu } from "@/lib/format";
 import { ADMIN_TRANSITIONS, ORDER_STATUS_LABEL } from "@/lib/constants";
-import { updateOrder } from "@/actions/orders";
+import UpdateOrderForm from "@/components/admin/UpdateOrderForm";
 import { buildAdminLink, orderStatusMessage } from "@/lib/whatsapp";
+import CheckPaymentButton from "@/components/order/CheckPaymentButton";
 
 export default async function AdminOrderDetailPage({ params }) {
   const { id } = await params;
@@ -55,6 +56,11 @@ export default async function AdminOrderDetailPage({ params }) {
         <p className="inline-flex rounded-full bg-zaitun-muda px-3 py-1 text-sm font-medium text-zaitun">
           {ORDER_STATUS_LABEL[order.status] || order.status}
         </p>
+        {order.status === "menunggu_pembayaran" ? (
+          <div className="pt-2">
+            <CheckPaymentButton orderCode={order.code} />
+          </div>
+        ) : null}
       </header>
 
       {/* Detail penerima */}
@@ -138,58 +144,7 @@ export default async function AdminOrderDetailPage({ params }) {
       </section>
 
       {/* Ubah status & resi */}
-      <section className="rounded-lg bg-putih p-4 ring-1 ring-garis">
-        <h2 className="font-serif text-lg font-semibold">Proses pesanan</h2>
-        {allowedNext.length === 0 ? (
-          <p className="mt-3 text-sm text-teks-sekunder">
-            Status terminal, tidak ada transisi berikutnya.
-          </p>
-        ) : (
-          <form action={updateOrder} className="mt-4 space-y-4">
-            <input type="hidden" name="orderId" value={order.id} />
-            <label className="block">
-              <span className="text-sm font-medium">Ubah status</span>
-              <select
-                name="status"
-                defaultValue={order.status}
-                className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm"
-              >
-                <option value={order.status}>
-                  {ORDER_STATUS_LABEL[order.status]} (saat ini)
-                </option>
-                {allowedNext.map((s) => (
-                  <option key={s} value={s}>
-                    {ORDER_STATUS_LABEL[s]}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block">
-              <span className="text-sm font-medium">Kurir</span>
-              <input
-                name="courier"
-                defaultValue={order.courier || ""}
-                placeholder="JNE / J&T"
-                className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm"
-              />
-            </label>
-            <label className="block">
-              <span className="text-sm font-medium">Nomor resi</span>
-              <input
-                name="trackingNumber"
-                defaultValue={order.tracking_number || ""}
-                className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm font-mono"
-              />
-            </label>
-            <button
-              type="submit"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-zaitun px-4 text-sm font-semibold text-krem hover:bg-zaitun-hover"
-            >
-              Simpan perubahan
-            </button>
-          </form>
-        )}
-      </section>
+      <UpdateOrderForm order={order} allowedNext={allowedNext} />
 
       {/* WhatsApp */}
       <section className="rounded-lg bg-putih p-4 ring-1 ring-garis">

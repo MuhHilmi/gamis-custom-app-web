@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { formatRupiah, formatTanggalWaktu } from "@/lib/format";
+import CheckPaymentButton from "@/components/order/CheckPaymentButton";
 import {
   ORDER_STATUS_LABEL,
   ORDER_TIMELINE,
@@ -80,8 +81,15 @@ export default async function OrderStatusPage({ params }) {
         <p className="font-mono text-lg font-bold tabular-nums">{order.code}</p>
         <StatusBadge status={order.status} />
         {order.status === "menunggu_pembayaran" ? (
-          <div className="mt-4">
+          <div className="mt-4 space-y-3">
             <PayNowButton token={order.snap_token} orderCode={order.code} />
+            <div>
+              <p className="mb-2 text-xs text-teks-sekunder">
+                Jika pembayaran sudah berhasil tetapi status belum berubah, periksa
+                kembali:
+              </p>
+              <CheckPaymentButton orderCode={order.code} />
+            </div>
           </div>
         ) : null}
       </header>

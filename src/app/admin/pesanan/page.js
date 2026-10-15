@@ -14,11 +14,28 @@ export default async function AdminOrdersPage({ searchParams }) {
   const params = typeof searchParams?.then === "function" ? await searchParams : searchParams || {};
   const q = params?.q ? String(params.q).trim() : "";
   const safeQ = q.replace(/[,%()]/g, "");
+  const allowedSorts = new Set(["code", "customer_name", "status", "total", "created_at"]);
+  const sort = allowedSorts.has(params?.sort) ? params.sort : "created_at";
+  const ascending = params?.dir === "asc";
+
+  function sortHref(column) {
+    const nextDir = sort === column && params?.dir === "asc" ? "desc" : "asc";
+    const nextParams = new URLSearchParams();
+    if (safeQ) nextParams.set("q", safeQ);
+    nextParams.set("sort", column);
+    nextParams.set("dir", nextDir);
+    return `/admin/pesanan?${nextParams.toString()}`;
+  }
+
+  function sortIndicator(column) {
+    if (sort !== column) return "";
+    return params?.dir === "asc" ? " ↑" : " ↓";
+  }
 
   let query = supabase
     .from("orders")
     .select("id, code, status, customer_name, customer_phone, city, province, total, created_at")
-    .order("created_at", { ascending: false })
+    .order(sort, { ascending })
     .limit(100);
 
   if (safeQ) {
@@ -61,11 +78,31 @@ export default async function AdminOrdersPage({ searchParams }) {
           <table className="min-w-full text-sm">
             <thead className="bg-krem-tua text-left">
               <tr>
-                <th className="px-3 py-2 font-semibold">Kode</th>
-                <th className="px-3 py-2 font-semibold">Nama</th>
-                <th className="px-3 py-2 font-semibold">Status</th>
-                <th className="px-3 py-2 font-semibold">Total</th>
-                <th className="px-3 py-2 font-semibold">Tanggal</th>
+                <th className="px-3 py-2 font-semibold">
+                  <Link href={sortHref("code")} className="inline-flex items-center gap-1 hover:underline">
+                    Kode{sortIndicator("code")}
+                  </Link>
+                </th>
+                <th className="px-3 py-2 font-semibold">
+                  <Link href={sortHref("customer_name")} className="inline-flex items-center gap-1 hover:underline">
+                    Nama{sortIndicator("customer_name")}
+                  </Link>
+                </th>
+                <th className="px-3 py-2 font-semibold">
+                  <Link href={sortHref("status")} className="inline-flex items-center gap-1 hover:underline">
+                    Status{sortIndicator("status")}
+                  </Link>
+                </th>
+                <th className="px-3 py-2 font-semibold">
+                  <Link href={sortHref("total")} className="inline-flex items-center gap-1 hover:underline">
+                    Total{sortIndicator("total")}
+                  </Link>
+                </th>
+                <th className="px-3 py-2 font-semibold">
+                  <Link href={sortHref("created_at")} className="inline-flex items-center gap-1 hover:underline">
+                    Tanggal{sortIndicator("created_at")}
+                  </Link>
+                </th>
                 <th className="px-3 py-2 font-semibold">Aksi</th>
               </tr>
             </thead>
@@ -86,7 +123,7 @@ export default async function AdminOrdersPage({ searchParams }) {
                   <td className="px-3 py-2">
                     <Link
                       href={`/admin/pesanan/${order.id}`}
-                      className="text-zaitun hover:underline"
+                      className="inline-flex min-h-9 items-center rounded-lg bg-zaitun px-3 py-1.5 text-sm font-medium text-krem transition hover:bg-zaitun-hover focus-visible:outline-krem"
                     >
                       Detail
                     </Link>
