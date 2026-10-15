@@ -1,13 +1,15 @@
 import Link from "next/link";
 
-export default function CategoryFilter({ categories, activeSlug }) {
+export default function CategoryFilter({ categories, activeSlug, basePath = "/katalog" }) {
   const items = [{ slug: null, name: "Semua" }, ...(categories || [])];
 
   return (
     <nav aria-label="Filter kategori" className="flex gap-2 overflow-x-auto pb-1">
       {items.map((category) => {
         const isActive = (category.slug ?? null) === (activeSlug ?? null);
-        const href = category.slug ? `/?kategori=${encodeURIComponent(category.slug)}` : "/";
+        const href = category.slug
+          ? `${basePath}?kategori=${encodeURIComponent(category.slug)}`
+          : basePath;
         return (
           <Link
             key={category.slug ?? "semua"}
