@@ -5,6 +5,7 @@ import { formatRupiah } from "@/lib/format";
 import { productPhotoUrl } from "@/lib/storage";
 import { createPublicClient } from "@/lib/supabase/public";
 import CustomizationForm from "@/components/product/CustomizationForm";
+import { buildAdminLink, productInquiryMessage } from "@/lib/whatsapp";
 
 const COLUMN_LABEL = {
   ukuran: "Ukuran",
@@ -141,6 +142,17 @@ export default async function ProductDetailPage({ params }) {
               </p>
             </div>
           ) : null}
+
+          <div className="mt-5">
+            <a
+              href={buildAdminLink(productInquiryMessage(product.name))}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-garis-input bg-putih px-4 text-sm font-semibold text-zaitun hover:border-zaitun"
+            >
+              Tanya admin via WhatsApp
+            </a>
+          </div>
 
           <div className="mt-6">
             <CustomizationForm product={product} options={options || []} />
