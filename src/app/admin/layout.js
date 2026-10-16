@@ -27,6 +27,9 @@ export default async function AdminLayout({ children }) {
               <Link href="/admin/ongkir" className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-zaitun-hover">
                 Ongkir
               </Link>
+              <Link href="/admin/tampilan" className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-zaitun-hover">
+                Tampilan
+              </Link>
               <form action={logout}>
                 <button
                   type="submit"

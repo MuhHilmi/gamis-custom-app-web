@@ -1,15 +1,35 @@
+import Image from "next/image";
 import Link from "next/link";
 import { createPublicClient } from "@/lib/supabase/public";
 import CategoryFilter from "@/components/catalog/CategoryFilter";
 import ProductCard from "@/components/catalog/ProductCard";
 import { SITE_TAGLINE } from "@/lib/constants";
-import { buildAdminLink, productInquiryMessage } from "@/lib/whatsapp";
+import { buildWaLink, productInquiryMessage } from "@/lib/whatsapp";
+import { productPhotoUrl } from "@/lib/storage";
+import {
+  DEFAULT_LANDING_CONFIG,
+  normalizeLandingConfig,
+  landingSortToSupabase,
+} from "@/lib/landing-config";
 
-export const metadata = {
-  title: "Gamis Custom - Gamis Pria Dijahit Sesuai Ukuranmu",
-  description:
-    "Pesan gamis pria custom: pilih ukuran, bahan, dan warna sendiri. Harga dan estimasi pengerjaan langsung terlihat.",
-};
+export async function generateMetadata() {
+  let config = DEFAULT_LANDING_CONFIG;
+  try {
+    const supabase = createPublicClient();
+    const { data } = await supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "landing")
+      .maybeSingle();
+    config = normalizeLandingConfig(data?.value);
+  } catch {
+    // fallback default
+  }
+  return {
+    title: config.seo.title,
+    description: config.seo.description,
+  };
+}
 
 export default async function LandingPage({ searchParams }) {
   const params =
@@ -18,11 +38,20 @@ export default async function LandingPage({ searchParams }) {
 
   let categories = [];
   let products = [];
+  let landing = DEFAULT_LANDING_CONFIG;
   let loadError = false;
 
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     try {
       const supabase = createPublicClient();
+      const { data: settingsData } = await supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "landing")
+        .maybeSingle();
+      landing = normalizeLandingConfig(settingsData?.value);
+
+      const sort = landingSortToSupabase(landing.catalog.sort);
       const [categoryResult, productResult] = await Promise.all([
         supabase
           .from("categories")
@@ -33,7 +62,7 @@ export default async function LandingPage({ searchParams }) {
           .from("products")
           .select("id, slug, name, base_price, lead_time_days, photos, category_id")
           .eq("is_active", true)
-          .order("created_at", { ascending: false }),
+          .order(sort.column, { ascending: sort.ascending }),
       ]);
       if (categoryResult.error || productResult.error) {
         loadError = true;
@@ -43,6 +72,7 @@ export default async function LandingPage({ searchParams }) {
       }
     } catch {
       loadError = true;
+      landing = DEFAULT_LANDING_CONFIG;
     }
   } else {
     loadError = true;
@@ -51,11 +81,15 @@ export default async function LandingPage({ searchParams }) {
   const selectedCategory = categorySlug
     ? categories.find((c) => c.slug === categorySlug) || null
     : null;
-  const filteredProducts = selectedCategory
+  const filteredProductsSource = selectedCategory
     ? products.filter((p) => p.category_id === selectedCategory.id)
     : products;
+  const filteredProducts = filteredProductsSource.slice(0, landing.catalog.limit);
 
-  const waLink = buildAdminLink(productInquiryMessage("gamis custom"));
+  const waLink = buildWaLink(
+    landing.contact.whatsappPhone,
+    productInquiryMessage(landing.contact.message)
+  );
 
   const whyItems = [
     {
@@ -111,39 +145,85 @@ export default async function LandingPage({ searchParams }) {
             <div>
               <div className="h-[3px] w-14 bg-emas" />
               <h1 className="mt-5 font-serif text-4xl font-bold leading-tight text-krem sm:text-5xl">
-                Gamis pria dijahit sesuai ukuranmu
+                {landing.hero.title}
               </h1>
               <p className="mt-4 max-w-prose text-base text-krem/90 sm:text-lg">
-                Pilih bahan dan warna, lihat harga langsung berubah, dan ketahui
-                perkiraan selesai sebelum membayar. Pengerjaan sekitar 7–14 hari.
+                {landing.hero.subtitle}
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link
-                  href="#koleksi"
+                  href={landing.hero.buttonHref}
                   className="inline-flex min-h-12 items-center justify-center rounded-lg bg-krem px-7 text-sm font-bold text-zaitun hover:bg-putih"
                 >
-                  Lihat koleksi
+                  {landing.hero.buttonText}
                 </Link>
-                <Link
-                  href="#cara-pesan"
-                  className="inline-flex min-h-12 items-center justify-center rounded-lg border-2 border-krem px-6 text-sm font-semibold text-krem hover:bg-zaitun-hover"
-                >
-                  Lihat cara pesan
-                </Link>
+                {landing.howToOrder.enabled ? (
+                  <Link
+                    href="#cara-pesan"
+                    className="inline-flex min-h-12 items-center justify-center rounded-lg border-2 border-krem px-6 text-sm font-semibold text-krem hover:bg-zaitun-hover"
+                  >
+                    Lihat cara pesan
+                  </Link>
+                ) : null}
               </div>
             </div>
 
-            <div className="grid grid-cols-5 gap-3">
-              <div className="col-span-3 row-span-2 flex aspect-[4/5] items-center justify-center rounded-2xl bg-krem-tua text-teks-sekunder">
-                <span className="text-sm font-semibold">Foto: gamis tampak depan</span>
+            {landing.hero.images.some(Boolean) ? (
+              <div className="grid grid-cols-5 gap-3">
+                <div className="relative col-span-3 row-span-2 flex aspect-[4/5] items-center justify-center overflow-hidden rounded-2xl bg-krem-tua text-teks-sekunder">
+                  {landing.hero.images[0] ? (
+                    <Image
+                      src={productPhotoUrl(landing.hero.images[0])}
+                      alt={landing.hero.title}
+                      fill
+                      priority
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-sm font-semibold">Foto: gamis tampak depan</span>
+                  )}
+                </div>
+                <div className="relative col-span-2 flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-[#D8CDB3] text-teks-sekunder">
+                  {landing.hero.images[1] ? (
+                    <Image
+                      src={productPhotoUrl(landing.hero.images[1])}
+                      alt={landing.hero.title}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, 50vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-xs font-semibold">Foto: detail kain</span>
+                  )}
+                </div>
+                <div className="relative col-span-2 flex aspect-square items-center justify-center overflow-hidden rounded-2xl bg-[#EFE7D3] text-teks-sekunder">
+                  {landing.hero.images[2] ? (
+                    <Image
+                      src={productPhotoUrl(landing.hero.images[2])}
+                      alt={landing.hero.title}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, 50vw"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-xs font-semibold">Foto: proses ukur</span>
+                  )}
+                </div>
               </div>
-              <div className="col-span-2 flex aspect-square items-center justify-center rounded-2xl bg-[#D8CDB3] text-teks-sekunder">
-                <span className="text-xs font-semibold">Foto: detail kain</span>
+            ) : (
+              <div className="grid grid-cols-5 gap-3">
+                <div className="col-span-3 row-span-2 flex aspect-[4/5] items-center justify-center rounded-2xl bg-krem-tua text-teks-sekunder">
+                  <span className="text-sm font-semibold">Foto: gamis tampak depan</span>
+                </div>
+                <div className="col-span-2 flex aspect-square items-center justify-center rounded-2xl bg-[#D8CDB3] text-teks-sekunder">
+                  <span className="text-xs font-semibold">Foto: detail kain</span>
+                </div>
+                <div className="col-span-2 flex aspect-square items-center justify-center rounded-2xl bg-[#EFE7D3] text-teks-sekunder">
+                  <span className="text-xs font-semibold">Foto: proses ukur</span>
+                </div>
               </div>
-              <div className="col-span-2 flex aspect-square items-center justify-center rounded-2xl bg-[#EFE7D3] text-teks-sekunder">
-                <span className="text-xs font-semibold">Foto: proses ukur</span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -152,13 +232,15 @@ export default async function LandingPage({ searchParams }) {
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
           <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="font-serif text-2xl font-semibold sm:text-3xl">
-              Koleksi gamis
-            </h2>
+            {landing.catalog.title}
+          </h2>
+          {landing.catalog.showCategoryFilter ? (
             <CategoryFilter
               categories={categories}
               activeSlug={categorySlug}
               basePath="/"
             />
+          ) : null}
           </div>
 
           {loadError ? (
@@ -185,20 +267,32 @@ export default async function LandingPage({ searchParams }) {
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <div className="order-2 lg:order-1">
-              <div className="flex aspect-[4/5] max-h-[520px] items-center justify-center rounded-2xl bg-[#D8CDB3] text-teks-sekunder">
-                <span className="text-sm font-semibold">Foto: proses menjahit</span>
-              </div>
+              {landing.why.imageUrl ? (
+                <div className="relative aspect-[4/5] max-h-[520px] overflow-hidden rounded-2xl bg-[#D8CDB3]">
+                  <Image
+                    src={productPhotoUrl(landing.why.imageUrl)}
+                    alt={landing.why.title}
+                    fill
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="flex aspect-[4/5] max-h-[520px] items-center justify-center rounded-2xl bg-[#D8CDB3] text-teks-sekunder">
+                  <span className="text-sm font-semibold">Foto: proses menjahit</span>
+                </div>
+              )}
             </div>
             <div className="order-1 lg:order-2">
               <div className="h-[3px] w-10 bg-emas" />
               <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl">
-                Kenapa pilih kami
+                {landing.why.title}
               </h2>
               <p className="mt-2 text-teks-sekunder">
-                Memesan gamis custom seharusnya jelas dari awal sampai barang tiba.
+                {landing.why.subtitle}
               </p>
               <div className="mt-6 space-y-3">
-                {whyItems.map((item) => (
+                {landing.why.items.map((item) => (
                   <div
                     key={item.title}
                     className="rounded-xl bg-putih p-4 ring-1 ring-garis"
@@ -213,44 +307,32 @@ export default async function LandingPage({ searchParams }) {
         </div>
       </section>
 
-      <section id="cara-pesan" className="bg-krem">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
-          <h2 className="font-serif text-2xl font-semibold sm:text-3xl">Cara pesan</h2>
-          <p className="mt-2 text-teks-sekunder">
-            Tiga langkah, tanpa perlu membuat akun.
-          </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            {[
-              {
-                n: "1",
-                t: "Pilih",
-                d: "Pilih model gamis, lalu tentukan bahan dan warna yang Anda suka.",
-              },
-              {
-                n: "2",
-                t: "Ukur",
-                d: "Isi ukuran dengan bantuan panduan bergambar. Data ukuran wajib lengkap sebelum bayar.",
-              },
-              {
-                n: "3",
-                t: "Bayar",
-                d: "Bayar lewat metode yang biasa Anda pakai. Kode pesanan dikirim ke email, progres bisa dipantau kapan saja.",
-              },
-            ].map((step) => (
-              <div
-                key={step.n}
-                className="rounded-xl bg-putih p-5 ring-1 ring-garis"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zaitun text-sm font-bold text-krem">
-                  {step.n}
-                </span>
-                <h3 className="mt-4 font-serif text-xl font-semibold">{step.t}</h3>
-                <p className="mt-2 text-sm text-teks-sekunder">{step.d}</p>
-              </div>
-            ))}
+      {landing.howToOrder.enabled ? (
+        <section id="cara-pesan" className="bg-krem">
+          <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
+            <h2 className="font-serif text-2xl font-semibold sm:text-3xl">
+              {landing.howToOrder.title}
+            </h2>
+            <p className="mt-2 text-teks-sekunder">
+              {landing.howToOrder.subtitle}
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-3">
+              {landing.howToOrder.steps.map((step) => (
+                <div
+                  key={step.n + step.t}
+                  className="rounded-xl bg-putih p-5 ring-1 ring-garis"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zaitun text-sm font-bold text-krem">
+                    {step.n}
+                  </span>
+                  <h3 className="mt-4 font-serif text-xl font-semibold">{step.t}</h3>
+                  <p className="mt-2 text-sm text-teks-sekunder">{step.d}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section id="testimoni" className="bg-krem-tua">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
