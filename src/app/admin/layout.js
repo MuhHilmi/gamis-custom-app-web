@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }) {
     <div className="min-h-screen bg-krem">
       {isAdmin ? (
         <header className="bg-zaitun text-krem">
-          <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
             <span className="font-serif text-xl font-semibold">Admin</span>
             <nav className="flex items-center gap-2 text-sm">
               <Link href="/admin/pesanan" className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-zaitun-hover">

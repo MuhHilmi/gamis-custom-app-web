@@ -75,6 +75,7 @@ export default function CustomizationForm({ product, options = [] }) {
         addedAt: new Date().toISOString(),
       };
       localStorage.setItem(CART_KEY, JSON.stringify([...cart, item]));
+      window.dispatchEvent(new Event("cart:changed"));
       setToast("Masuk keranjang");
       window.setTimeout(() => setToast(null), 2500);
     } catch (error) {

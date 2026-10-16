@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE_NAME } from "@/lib/constants";
+import CartNavLink from "@/components/layout/CartNavLink";
 
 export default function Header() {
   return (
@@ -24,12 +25,7 @@ export default function Header() {
           >
             Lacak pesanan
           </Link>
-          <Link
-            href="/keranjang"
-            className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-semibold hover:bg-zaitun-hover focus-visible:outline-krem"
-          >
-            Keranjang
-          </Link>
+          <CartNavLink />
         </nav>
       </div>
     </header>
