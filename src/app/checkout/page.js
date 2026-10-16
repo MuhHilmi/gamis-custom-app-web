@@ -213,7 +213,7 @@ export default function CheckoutPage() {
         <h1 className="font-serif text-2xl font-semibold">Checkout</h1>
         <p className="mt-4 text-sm text-teks-sekunder">Keranjangmu masih kosong</p>
         <Link
-          href="/"
+          href="/katalog"
           className="mt-6 inline-flex min-h-11 items-center justify-center rounded-lg bg-zaitun px-5 text-sm font-semibold text-krem hover:bg-zaitun-hover"
         >
           Lihat koleksi

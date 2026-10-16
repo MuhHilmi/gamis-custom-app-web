@@ -69,7 +69,7 @@ export default async function OrderStatusPage({ params }) {
     <article className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8">
       <nav className="mb-4">
         <Link
-          href="/"
+          href="/katalog"
           className="inline-flex min-h-11 items-center text-sm font-medium text-zaitun hover:underline"
         >
           ← Kembali ke katalog

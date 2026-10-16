@@ -13,6 +13,12 @@ export default function Header() {
         </Link>
         <nav aria-label="Navigasi utama" className="flex items-center gap-1">
           <Link
+            href="/katalog"
+            className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm hover:bg-zaitun-hover focus-visible:outline-krem"
+          >
+            Katalog
+          </Link>
+          <Link
             href="/lacak"
             className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm hover:bg-zaitun-hover focus-visible:outline-krem"
           >

@@ -75,7 +75,7 @@ export default async function ProductDetailPage({ params }) {
   return (
     <article className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
       <nav aria-label="Navigasi balik" className="mb-4">
-        <Link href="/" className="inline-flex min-h-11 items-center text-sm font-medium text-zaitun hover:underline">
+        <Link href="/katalog" className="inline-flex min-h-11 items-center text-sm font-medium text-zaitun hover:underline">
           ← Kembali ke katalog
         </Link>
       </nav>

@@ -140,7 +140,7 @@ export default function TrackPage() {
         Kode pesanan bersifat rahasia. Jangan bagikan ke orang lain.
       </p>
       <p className="mt-2 text-xs text-teks-sekunder">
-        <Link href="/" className="text-zaitun hover:underline">
+        <Link href="/katalog" className="text-zaitun hover:underline">
           Kembali ke katalog
         </Link>
       </p>
