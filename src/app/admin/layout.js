@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { logout } from "@/actions/auth";
 import { createClient } from "@/lib/supabase/server";
+import AdminNavLinks from "@/components/layout/AdminNavLinks";
 
 export default async function AdminLayout({ children }) {
   const supabase = await createClient();
@@ -15,30 +15,19 @@ export default async function AdminLayout({ children }) {
     <div className="min-h-screen bg-krem">
       {isAdmin ? (
         <header className="bg-zaitun text-krem">
-          <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
             <span className="font-serif text-xl font-semibold">Admin</span>
-            <nav className="flex items-center gap-2 text-sm">
-              <Link href="/admin/pesanan" className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-zaitun-hover">
-                Pesanan
-              </Link>
-              <Link href="/admin/produk" className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-zaitun-hover">
-                Produk
-              </Link>
-              <Link href="/admin/ongkir" className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-zaitun-hover">
-                Ongkir
-              </Link>
-              <Link href="/admin/tampilan" className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-zaitun-hover">
-                Tampilan
-              </Link>
+            <div className="flex items-center gap-2 text-sm">
+              <AdminNavLinks />
               <form action={logout}>
                 <button
                   type="submit"
-                  className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-zaitun-hover"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 hover:bg-red-800"
                 >
                   Keluar
                 </button>
               </form>
-            </nav>
+            </div>
           </div>
         </header>
       ) : null}

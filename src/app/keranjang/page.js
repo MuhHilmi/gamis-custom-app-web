@@ -49,6 +49,7 @@ export default function CartPage() {
           : item
       );
       writeCart(next);
+      window.dispatchEvent(new Event("cart:changed"));
       return next;
     });
   }
@@ -57,6 +58,7 @@ export default function CartPage() {
     setItems((prev) => {
       const next = prev.filter((item) => item.id !== id);
       writeCart(next);
+      window.dispatchEvent(new Event("cart:changed"));
       return next;
     });
   }
