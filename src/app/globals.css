@@ -80,11 +80,49 @@ body {
   }
 }
 
+/* Getaran singkat untuk input yang tidak valid. */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+}
+
+/* Goyangan halus, mis. ikon keranjang saat di-hover. */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-8deg);
+  }
+  75% {
+    transform: rotate(8deg);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  /* Muncul saat halaman dimuat (hero). Delay diatur lewat --fade-up-delay. */
+  /* Muncul saat halaman dimuat. Durasi & delay diatur lewat custom property. */
   .fade-up {
-    animation: fade-up 0.7s ease-out both;
+    animation: fade-up var(--fade-up-duration, 0.7s) ease-out both;
     animation-delay: var(--fade-up-delay, 0ms);
+  }
+
+  .shake {
+    animation: shake 0.3s ease-in-out;
   }
 }
 

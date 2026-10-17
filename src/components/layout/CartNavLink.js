@@ -53,7 +53,7 @@ export default function CartNavLink() {
     <Link
       href="/keranjang"
       aria-label={loaded && count > 0 ? `Keranjang, ${count} barang` : "Keranjang"}
-      className="relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 hover:bg-zaitun-hover focus-visible:outline-krem"
+      className="group relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 hover:bg-zaitun-hover focus-visible:outline-krem"
     >
       <svg
         width="22"
@@ -65,6 +65,7 @@ export default function CartNavLink() {
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden="true"
+        className="group-hover:animate-[wiggle_0.4s_ease-in-out]"
       >
         <circle cx="9" cy="21" r="1" />
         <circle cx="20" cy="21" r="1" />

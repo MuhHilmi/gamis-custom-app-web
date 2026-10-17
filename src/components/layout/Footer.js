@@ -10,11 +10,14 @@ export default function Footer() {
         <nav aria-label="Tautan footer" className="flex flex-wrap gap-x-5 gap-y-1">
           <a
             href={`https://wa.me/${wa}`}
-            className="inline-flex min-h-11 items-center underline"
+            className="inline-flex min-h-11 items-center underline underline-offset-2 transition duration-200 hover:-translate-y-0.5 hover:text-zaitun-hover"
           >
             Hubungi via WhatsApp
           </a>
-          <Link href="/lacak" className="inline-flex min-h-11 items-center underline">
+          <Link
+            href="/lacak"
+            className="inline-flex min-h-11 items-center underline underline-offset-2 transition duration-200 hover:-translate-y-0.5 hover:text-zaitun-hover"
+          >
             Lacak pesanan
           </Link>
         </nav>
