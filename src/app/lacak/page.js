@@ -3,6 +3,39 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { isValidEmail, isValidPhone } from "@/lib/validation";
+
+// Gaya dasar semua kolom input: transisi border halus + cincin fokus lembut.
+const INPUT_BASE =
+  "mt-1 block w-full min-h-11 rounded-lg border bg-putih px-4 py-2 text-sm transition duration-200 focus:outline-none focus:ring-2";
+const INPUT_IDLE = "border-garis-input focus:border-zaitun focus:ring-zaitun/25";
+const INPUT_VALID = "border-ok focus:border-ok focus:ring-ok/25";
+const INPUT_INVALID = "border-merah focus:border-merah focus:ring-merah/25";
+
+function Spinner() {
+  return (
+    <svg
+      className="h-4 w-4 animate-spin"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="3"
+      />
+      <path
+        className="opacity-90"
+        fill="currentColor"
+        d="M12 2a10 10 0 0 1 10 10h-3a7 7 0 0 0-7-7V2z"
+      />
+    </svg>
+  );
+}
 
 export default function TrackPage() {
   const router = useRouter();
@@ -15,6 +48,35 @@ export default function TrackPage() {
   const [forgotError, setForgotError] = useState(null);
   const [trackSubmitting, setTrackSubmitting] = useState(false);
   const [forgotSubmitting, setForgotSubmitting] = useState(false);
+
+  // Umpan balik validasi untuk kolom "Email atau nomor HP".
+  const [forgotTouched, setForgotTouched] = useState(false);
+  const [forgotShake, setForgotShake] = useState(false);
+
+  const forgotTrimmed = forgotValue.trim();
+  const forgotValid = isValidEmail(forgotTrimmed) || isValidPhone(forgotTrimmed);
+  // Saat belum disentuh: hijau bila valid, netral selain itu. Setelah disentuh
+  // (blur atau submit): hijau bila valid, merah bila tidak.
+  const forgotState = !forgotTouched
+    ? forgotTrimmed && forgotValid
+      ? "valid"
+      : "idle"
+    : forgotValid
+      ? "valid"
+      : "invalid";
+
+  const forgotInputClass = `${INPUT_BASE} ${
+    forgotState === "valid"
+      ? INPUT_VALID
+      : forgotState === "invalid"
+        ? INPUT_INVALID
+        : INPUT_IDLE
+  }${forgotShake ? " shake" : ""}`;
+
+  function triggerForgotShake() {
+    setForgotShake(false);
+    window.requestAnimationFrame(() => setForgotShake(true));
+  }
 
   async function handleTrack(event) {
     event.preventDefault();
@@ -44,6 +106,11 @@ export default function TrackPage() {
 
   async function handleForgot(event) {
     event.preventDefault();
+    if (!forgotValid) {
+      setForgotTouched(true);
+      triggerForgotShake();
+      return;
+    }
     setForgotSubmitting(true);
     setForgotError(null);
     setForgotMessage(null);
@@ -67,15 +134,28 @@ export default function TrackPage() {
 
   return (
     <section className="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-10">
-      <h1 className="font-serif text-2xl font-semibold">Lacak pesanan</h1>
-      <p className="mt-2 text-sm text-teks-sekunder">
+      <h1
+        className="fade-up font-serif text-2xl font-semibold"
+        style={{ "--fade-up-duration": "0.3s" }}
+      >
+        Lacak pesanan
+      </h1>
+      <p
+        className="fade-up mt-2 text-sm text-teks-sekunder"
+        style={{ "--fade-up-duration": "0.3s", "--fade-up-delay": "90ms" }}
+      >
         Masukkan kode pesanan dan nomor HP untuk melihat status. Jika lupa kode,
         isi email atau nomor HP terdaftar.
       </p>
 
       <div className="mt-6 space-y-8">
         {/* Lacak */}
-        <form onSubmit={handleTrack} noValidate className="space-y-4 rounded-lg bg-putih p-4 ring-1 ring-garis">
+        <form
+          onSubmit={handleTrack}
+          noValidate
+          className="fade-up space-y-4 rounded-lg bg-putih p-4 ring-1 ring-garis"
+          style={{ "--fade-up-duration": "0.3s", "--fade-up-delay": "180ms" }}
+        >
           <h2 className="font-serif text-lg font-semibold">Cari dengan kode</h2>
           <label className="block">
             <span className="text-sm font-medium">Kode pesanan</span>
@@ -83,7 +163,7 @@ export default function TrackPage() {
               value={trackForm.orderCode}
               onChange={(e) => setTrackForm((p) => ({ ...p, orderCode: e.target.value }))}
               placeholder="GM-XXXXXXXXXX"
-              className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm font-mono"
+              className={`${INPUT_BASE} ${INPUT_IDLE} font-mono`}
             />
           </label>
           <label className="block">
@@ -93,45 +173,88 @@ export default function TrackPage() {
               onChange={(e) => setTrackForm((p) => ({ ...p, customerPhone: e.target.value }))}
               placeholder="081234567890"
               inputMode="tel"
-              className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm"
+              className={`${INPUT_BASE} ${INPUT_IDLE}`}
             />
           </label>
           {trackError ? (
-            <p className="rounded-lg bg-merah-bg px-4 py-3 text-sm text-merah">{trackError}</p>
+            <p
+              role="alert"
+              className="fade-up rounded-lg bg-merah-bg px-4 py-3 text-sm text-merah"
+              style={{ "--fade-up-duration": "0.3s" }}
+            >
+              {trackError}
+            </p>
           ) : null}
           <button
             type="submit"
             disabled={trackSubmitting}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-zaitun px-4 text-sm font-semibold text-krem hover:bg-zaitun-hover disabled:cursor-not-allowed disabled:bg-zaitun/45"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-zaitun px-4 text-sm font-semibold text-krem transition duration-200 enabled:hover:scale-[1.02] enabled:hover:bg-zaitun-hover enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-zaitun/45"
           >
-            {trackSubmitting ? "Mencari..." : "Cari pesanan"}
+            {trackSubmitting ? (
+              <>
+                <Spinner />
+                Mencari...
+              </>
+            ) : (
+              "Cari pesanan"
+            )}
           </button>
         </form>
 
         {/* Lupa kode */}
-        <form onSubmit={handleForgot} noValidate className="space-y-4 rounded-lg bg-putih p-4 ring-1 ring-garis">
+        <form
+          onSubmit={handleForgot}
+          noValidate
+          className="fade-up space-y-4 rounded-lg bg-putih p-4 ring-1 ring-garis"
+          style={{ "--fade-up-duration": "0.3s", "--fade-up-delay": "280ms" }}
+        >
           <h2 className="font-serif text-lg font-semibold">Lupa kode pesanan</h2>
           <label className="block">
             <span className="text-sm font-medium">Email atau nomor HP</span>
             <input
               value={forgotValue}
               onChange={(e) => setForgotValue(e.target.value)}
+              onBlur={() => {
+                setForgotTouched(true);
+                if (forgotTrimmed && !forgotValid) triggerForgotShake();
+              }}
+              onAnimationEnd={() => setForgotShake(false)}
+              aria-invalid={forgotState === "invalid"}
               placeholder="nama@email.com atau 081234567890"
-              className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm"
+              className={forgotInputClass}
             />
           </label>
           {forgotError ? (
-            <p className="rounded-lg bg-merah-bg px-4 py-3 text-sm text-merah">{forgotError}</p>
+            <p
+              role="alert"
+              className="fade-up rounded-lg bg-merah-bg px-4 py-3 text-sm text-merah"
+              style={{ "--fade-up-duration": "0.3s" }}
+            >
+              {forgotError}
+            </p>
           ) : null}
           {forgotMessage ? (
-            <p className="rounded-lg bg-ok-bg px-4 py-3 text-sm text-ok">{forgotMessage}</p>
+            <p
+              role="status"
+              className="fade-up rounded-lg bg-ok-bg px-4 py-3 text-sm text-ok"
+              style={{ "--fade-up-duration": "0.3s" }}
+            >
+              {forgotMessage}
+            </p>
           ) : null}
           <button
             type="submit"
             disabled={forgotSubmitting}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-zaitun px-4 text-sm font-semibold text-krem hover:bg-zaitun-hover disabled:cursor-not-allowed disabled:bg-zaitun/45"
+            className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-zaitun px-4 text-sm font-semibold text-krem transition duration-200 enabled:hover:scale-[1.02] enabled:hover:bg-zaitun-hover enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-zaitun/45"
           >
-            {forgotSubmitting ? "Mengirim..." : "Kirim ulang kode"}
+            {forgotSubmitting ? (
+              <>
+                <Spinner />
+                Mengirim...
+              </>
+            ) : (
+              "Kirim ulang kode"
+            )}
           </button>
         </form>
       </div>
@@ -140,7 +263,10 @@ export default function TrackPage() {
         Kode pesanan bersifat rahasia. Jangan bagikan ke orang lain.
       </p>
       <p className="mt-2 text-xs text-teks-sekunder">
-        <Link href="/katalog" className="text-zaitun hover:underline">
+        <Link
+          href="/katalog"
+          className="inline-block text-zaitun underline-offset-2 transition duration-200 hover:-translate-y-0.5 hover:text-zaitun-hover hover:underline"
+        >
           Kembali ke katalog
         </Link>
       </p>

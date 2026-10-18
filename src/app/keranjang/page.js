@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { formatRupiah } from "@/lib/format";
 import { productPhotoUrl } from "@/lib/storage";
 import { lineTotal, subtotalOfLines } from "@/lib/pricing";
+import EmptyCartIllustration from "@/components/cart/EmptyCartIllustration";
 
 const CART_KEY = "gamis-cart";
 
@@ -78,13 +79,47 @@ export default function CartPage() {
   if (isEmpty) {
     return (
       <section className="mx-auto max-w-3xl px-4 py-10 text-center sm:px-6">
-        <h1 className="font-serif text-2xl font-semibold">Keranjang</h1>
-        <p className="mt-4 text-sm text-teks-sekunder">Keranjangmu masih kosong</p>
+        <div className="flex justify-center">
+          <div className="float-soft">
+            <div className="pop-bounce">
+              <EmptyCartIllustration />
+            </div>
+          </div>
+        </div>
+
+        <h1
+          className="fade-up-scale mt-6 font-serif text-2xl font-semibold"
+          style={{ "--fade-up-duration": "0.4s", "--fade-up-delay": "260ms" }}
+        >
+          Keranjang
+        </h1>
+        <p
+          className="fade-up-scale mt-2 text-sm text-teks-sekunder"
+          style={{ "--fade-up-duration": "0.4s", "--fade-up-delay": "380ms" }}
+        >
+          Keranjangmu masih kosong
+        </p>
         <Link
           href="/katalog"
-          className="mt-6 inline-flex min-h-11 items-center justify-center rounded-lg bg-zaitun px-5 text-sm font-semibold text-krem hover:bg-zaitun-hover"
+          className="group fade-up-scale mt-6 inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg bg-zaitun px-5 text-sm font-semibold text-krem transition duration-300 hover:scale-[1.03] hover:bg-zaitun-hover active:scale-[0.97]"
+          style={{ "--fade-up-duration": "0.4s", "--fade-up-delay": "500ms" }}
         >
           Lihat koleksi
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          >
+            <path d="M7 17 17 7" />
+            <path d="M8 7h9v9" />
+          </svg>
         </Link>
       </section>
     );

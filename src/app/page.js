@@ -3,7 +3,8 @@ import Link from "next/link";
 import { createPublicClient } from "@/lib/supabase/public";
 import CategoryFilter from "@/components/catalog/CategoryFilter";
 import ProductCard from "@/components/catalog/ProductCard";
-import { SITE_TAGLINE } from "@/lib/constants";
+import Reveal from "@/components/motion/Reveal";
+import Accordion from "@/components/landing/Accordion";
 import { buildWaLink, productInquiryMessage } from "@/lib/whatsapp";
 import { productPhotoUrl } from "@/lib/storage";
 import {
@@ -91,25 +92,6 @@ export default async function LandingPage({ searchParams }) {
     productInquiryMessage(landing.contact.message)
   );
 
-  const whyItems = [
-    {
-      title: "Ukuran pas, minim retur",
-      text: "Panduan ukuran bergambar dan tabel ukuran per model. Data ukuran wajib lengkap sebelum pembayaran.",
-    },
-    {
-      title: "Harga transparan",
-      text: "Tambahan harga bahan dan ukuran terlihat langsung saat memilih. Ongkir jelas sebelum Anda membayar.",
-    },
-    {
-      title: "Estimasi selesai yang jelas",
-      text: "Lama pengerjaan tertera di tiap produk, dan perkiraan tanggal selesai muncul begitu pembayaran diterima.",
-    },
-    {
-      title: "Pantau tanpa akun",
-      text: "Lihat progres dari dibayar, dijahit, sampai dikirim lewat kode pesanan. Tidak perlu daftar.",
-    },
-  ];
-
   const faqs = [
     {
       q: "Bagaimana cara mengukur supaya pas?",
@@ -143,33 +125,75 @@ export default async function LandingPage({ searchParams }) {
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
           <div className="grid items-center gap-10 lg:grid-cols-2">
             <div>
-              <div className="h-[3px] w-14 bg-emas" />
-              <h1 className="mt-5 font-serif text-4xl font-bold leading-tight text-krem sm:text-5xl">
+              <div className="fade-up h-[3px] w-14 bg-emas" />
+              <h1
+                className="fade-up mt-5 font-serif text-4xl font-bold leading-tight text-krem sm:text-5xl"
+                style={{ "--fade-up-delay": "60ms" }}
+              >
                 {landing.hero.title}
               </h1>
-              <p className="mt-4 max-w-prose text-base text-krem/90 sm:text-lg">
+              <p
+                className="fade-up mt-4 max-w-prose text-base text-krem/90 sm:text-lg"
+                style={{ "--fade-up-delay": "140ms" }}
+              >
                 {landing.hero.subtitle}
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div
+                className="fade-up mt-7 flex flex-wrap gap-3"
+                style={{ "--fade-up-delay": "220ms" }}
+              >
                 <Link
                   href={landing.hero.buttonHref}
-                  className="inline-flex min-h-12 items-center justify-center rounded-lg bg-krem px-7 text-sm font-bold text-zaitun hover:bg-putih"
+                  className="group inline-flex min-h-12 items-center justify-center gap-1.5 rounded-lg bg-krem px-7 text-sm font-bold text-zaitun transition duration-300 hover:scale-[1.03] hover:bg-putih hover:shadow"
                 >
                   {landing.hero.buttonText}
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                    className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  >
+                    <path d="M7 17 17 7" />
+                    <path d="M8 7h9v9" />
+                  </svg>
                 </Link>
                 {landing.howToOrder.enabled ? (
                   <Link
                     href="#cara-pesan"
-                    className="inline-flex min-h-12 items-center justify-center rounded-lg border-2 border-krem px-6 text-sm font-semibold text-krem hover:bg-zaitun-hover"
+                    className="group inline-flex min-h-12 items-center justify-center gap-1.5 rounded-lg border-2 border-krem px-6 text-sm font-semibold text-krem transition duration-300 hover:scale-[1.03] hover:bg-zaitun-hover"
                   >
                     Lihat cara pesan
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    >
+                      <path d="M7 17 17 7" />
+                      <path d="M8 7h9v9" />
+                    </svg>
                   </Link>
                 ) : null}
               </div>
             </div>
 
             {landing.hero.images.some(Boolean) ? (
-              <div className="grid grid-cols-5 gap-3">
+              <div
+                className="fade-up grid grid-cols-5 gap-3"
+                style={{ "--fade-up-delay": "160ms" }}
+              >
                 <div className="relative col-span-3 row-span-2 flex aspect-[4/5] items-center justify-center overflow-hidden rounded-2xl bg-krem-tua text-teks-sekunder">
                   {landing.hero.images[0] ? (
                     <Image
@@ -212,7 +236,10 @@ export default async function LandingPage({ searchParams }) {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-5 gap-3">
+              <div
+                className="fade-up grid grid-cols-5 gap-3"
+                style={{ "--fade-up-delay": "160ms" }}
+              >
                 <div className="col-span-3 row-span-2 flex aspect-[4/5] items-center justify-center rounded-2xl bg-krem-tua text-teks-sekunder">
                   <span className="text-sm font-semibold">Foto: gamis tampak depan</span>
                 </div>
@@ -255,8 +282,14 @@ export default async function LandingPage({ searchParams }) {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+              {filteredProducts.map((product, index) => (
+                <Reveal
+                  key={product.id}
+                  delay={Math.min(index, 7) * 70}
+                  className="h-full"
+                >
+                  <ProductCard product={product} />
+                </Reveal>
               ))}
             </div>
           )}
@@ -266,7 +299,7 @@ export default async function LandingPage({ searchParams }) {
       <section id="kenapa" className="bg-krem-tua">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
           <div className="grid items-center gap-10 lg:grid-cols-2">
-            <div className="order-2 lg:order-1">
+            <Reveal className="order-2 lg:order-1">
               {landing.why.imageUrl ? (
                 <div className="relative aspect-[4/5] max-h-[520px] overflow-hidden rounded-2xl bg-[#D8CDB3]">
                   <Image
@@ -282,8 +315,8 @@ export default async function LandingPage({ searchParams }) {
                   <span className="text-sm font-semibold">Foto: proses menjahit</span>
                 </div>
               )}
-            </div>
-            <div className="order-1 lg:order-2">
+            </Reveal>
+            <Reveal delay={120} className="order-1 lg:order-2">
               <div className="h-[3px] w-10 bg-emas" />
               <h2 className="mt-3 font-serif text-2xl font-semibold sm:text-3xl">
                 {landing.why.title}
@@ -291,18 +324,14 @@ export default async function LandingPage({ searchParams }) {
               <p className="mt-2 text-teks-sekunder">
                 {landing.why.subtitle}
               </p>
-              <div className="mt-6 space-y-3">
-                {landing.why.items.map((item) => (
-                  <div
-                    key={item.title}
-                    className="rounded-xl bg-putih p-4 ring-1 ring-garis"
-                  >
-                    <h3 className="font-serif text-lg font-semibold">{item.title}</h3>
-                    <p className="mt-1 text-sm text-teks-sekunder">{item.text}</p>
-                  </div>
-                ))}
+              <div className="mt-6">
+                <Accordion
+                  items={landing.why.items}
+                  defaultOpenFirst
+                  titleClassName="font-serif text-lg font-semibold"
+                />
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -317,17 +346,20 @@ export default async function LandingPage({ searchParams }) {
               {landing.howToOrder.subtitle}
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
-              {landing.howToOrder.steps.map((step) => (
-                <div
+              {landing.howToOrder.steps.map((step, index) => (
+                <Reveal
                   key={step.n + step.t}
-                  className="rounded-xl bg-putih p-5 ring-1 ring-garis"
+                  delay={index * 120}
+                  className="h-full"
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zaitun text-sm font-bold text-krem">
-                    {step.n}
-                  </span>
-                  <h3 className="mt-4 font-serif text-xl font-semibold">{step.t}</h3>
-                  <p className="mt-2 text-sm text-teks-sekunder">{step.d}</p>
-                </div>
+                  <div className="h-full rounded-xl bg-putih p-5 ring-1 ring-garis">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zaitun text-sm font-bold text-krem">
+                      {step.n}
+                    </span>
+                    <h3 className="mt-4 font-serif text-xl font-semibold">{step.t}</h3>
+                    <p className="mt-2 text-sm text-teks-sekunder">{step.d}</p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -393,19 +425,12 @@ export default async function LandingPage({ searchParams }) {
           <p className="mt-2 text-teks-sekunder">
             Belum menemukan jawabannya? Tanya admin lewat WhatsApp.
           </p>
-          <div className="mt-6 divide-y divide-garis border-y border-garis">
-            {faqs.map((faq) => (
-              <details key={faq.q} className="py-2">
-                <summary className="flex min-h-14 cursor-pointer items-center justify-between gap-4 py-2 text-base font-semibold">
-                  {faq.q}
-                  <span className="text-xl text-zaitun" aria-hidden="true">
-                    +
-                  </span>
-                </summary>
-                <p className="pb-4 text-sm text-teks-sekunder">{faq.a}</p>
-              </details>
-            ))}
-          </div>
+          <Reveal className="mt-6">
+            <Accordion
+              items={faqs.map((faq) => ({ title: faq.q, text: faq.a }))}
+              allowMultiple
+            />
+          </Reveal>
         </div>
       </section>
 

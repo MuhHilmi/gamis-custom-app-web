@@ -15,13 +15,13 @@ export default function Header() {
         <nav aria-label="Navigasi utama" className="flex items-center gap-1">
           <Link
             href="/katalog"
-            className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm hover:bg-zaitun-hover focus-visible:outline-krem"
+            className="relative inline-flex min-h-11 items-center rounded-lg px-3 text-sm hover:bg-zaitun-hover focus-visible:outline-krem after:absolute after:bottom-2 after:left-3 after:right-3 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
           >
             Katalog
           </Link>
           <Link
             href="/lacak"
-            className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm hover:bg-zaitun-hover focus-visible:outline-krem"
+            className="relative inline-flex min-h-11 items-center rounded-lg px-3 text-sm hover:bg-zaitun-hover focus-visible:outline-krem after:absolute after:bottom-2 after:left-3 after:right-3 after:h-px after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 after:content-[''] hover:after:scale-x-100"
           >
             Lacak pesanan
           </Link>
