@@ -14,32 +14,62 @@ export default function KoleksiTerbaru({ title, items }) {
 
   const displayItems = items?.length ? items : defaultItems;
 
+  // Split: first item = big, rest = side
+  const [bigItem, ...sideItems] = displayItems;
+
   return (
     <section id="koleksi" className="container section" style={{ paddingBottom: 64 }}>
       <h2 className="h-display h-section" style={{ marginBottom: 40 }}>
         {title}
       </h2>
       <div className="collage">
-        {displayItems.map((item, index) => (
-          <a key={index} className={`tile ${item.tall ? "tall big" : ""}`} href={item.href}>
+        {/* Big item (tall) */}
+        {bigItem && (
+          <a className={`tile ${bigItem.tall ? "tall big" : "big"}`} href={bigItem.href}>
             <div className="ph">
-              {item.imageUrl ? (
+              {bigItem.imageUrl ? (
                 <Image
-                  src={productPhotoUrl(item.imageUrl)}
-                  alt={item.caption}
+                  src={productPhotoUrl(bigItem.imageUrl)}
+                  alt={bigItem.caption}
                   fill
-                  sizes={item.tall ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 1024px) 50vw, 25vw"}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
                   style={{ objectPosition: "center" }}
                 />
               ) : (
-                <GamisSvg className="sil" style={{ width: item.tall ? 150 : 96, height: item.tall ? 190 : 120 }} />
+                <GamisSvg className="sil" style={{ width: bigItem.tall ? 150 : 96, height: bigItem.tall ? 190 : 120 }} />
               )}
-              <span className="ph-label">Foto: {item.caption}</span>
+              <span className="ph-label">Foto: {bigItem.caption}</span>
             </div>
-            <span className="tile-cap">{item.caption}</span>
+            <span className="tile-cap">{bigItem.caption}</span>
           </a>
-        ))}
+        )}
+
+        {/* Side items (stacked vertically) */}
+        {sideItems.length > 0 && (
+          <div className="side">
+            {sideItems.map((item, index) => (
+              <a key={index} className={`tile ${item.tall ? "tall" : ""}`} href={item.href}>
+                <div className="ph">
+                  {item.imageUrl ? (
+                    <Image
+                      src={productPhotoUrl(item.imageUrl)}
+                      alt={item.caption}
+                      fill
+                      sizes="(max-width: 1024px) 50vw, 25vw"
+                      className="object-cover"
+                      style={{ objectPosition: "center" }}
+                    />
+                  ) : (
+                    <GamisSvg className="sil" style={{ width: item.tall ? 150 : 96, height: item.tall ? 190 : 120 }} />
+                  )}
+                  <span className="ph-label">Foto: {item.caption}</span>
+                </div>
+                <span className="tile-cap">{item.caption}</span>
+              </a>
+            ))}
+          </div>
+        )}
       </div>
       <div className="center mt-36">
         <Link className="btn btn-olive" href="#pilih-model">

@@ -55,7 +55,7 @@ export default function CartNavLink() {
       href="/keranjang"
       aria-label={loaded && count > 0 ? `Keranjang, ${count} barang` : "Keranjang"}
       className={
-        "group relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 hover:bg-zaitun-hover focus-visible:outline-krem" +
+        "group relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 hover:bg-krem focus-visible:outline-krem" +
         // Menegaskan keranjang kosong lewat goyangan singkat sekali jalan.
         (isEmpty ? " cart-nudge" : "")
       }
