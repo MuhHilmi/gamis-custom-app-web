@@ -26,15 +26,41 @@ function toInt(value, fallback = 0) {
   return Number.isFinite(n) ? Math.trunc(n) : fallback;
 }
 
-function parseSizeChart(text) {
-  const raw = String(text || "").trim();
-  if (!raw) return [];
-  try {
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
+function parseSizeChart(formData, prefix = "sizeChart") {
+  const rows = [];
+  let index = 0;
+
+  while (true) {
+    const ukuran = formData.get(`${prefix}[${index}][ukuran]`);
+    if (ukuran === null) break;
+
+    const row = { ukuran: String(ukuran || "").trim() };
+    if (!row.ukuran) {
+      index++;
+      continue;
+    }
+
+    const numericKeys = [
+      "lingkar_dada_cm",
+      "lingkar_pinggang_cm",
+      "panjang_badan_cm",
+      "panjang_lengan_cm",
+      "lingkar_leher_cm",
+    ];
+
+    for (const key of numericKeys) {
+      const val = formData.get(`${prefix}[${index}][${key}]`);
+      if (val !== null && val !== "") {
+        const num = Number(val);
+        if (Number.isFinite(num)) row[key] = num;
+      }
+    }
+
+    rows.push(row);
+    index++;
   }
+
+  return rows;
 }
 
 function parsePhotos(text) {
@@ -60,7 +86,7 @@ export async function createProduct(formData) {
       material_info: String(formData.get("materialInfo") || "").trim() || null,
       base_price: Math.max(0, toInt(formData.get("basePrice"), 0)),
       photos: parsePhotos(formData.get("photos")),
-      size_chart: parseSizeChart(formData.get("sizeChart")),
+      size_chart: parseSizeChart(formData),
       lead_time_days: Math.max(1, toInt(formData.get("leadTimeDays"), 7)),
       category_id: String(formData.get("categoryId") || "").trim() || null,
       is_active: formData.get("isActive") === "on",
@@ -90,7 +116,7 @@ export async function updateProduct(formData) {
       material_info: String(formData.get("materialInfo") || "").trim() || null,
       base_price: Math.max(0, toInt(formData.get("basePrice"), 0)),
       photos: parsePhotos(formData.get("photos")),
-      size_chart: parseSizeChart(formData.get("sizeChart")),
+      size_chart: parseSizeChart(formData),
       lead_time_days: Math.max(1, toInt(formData.get("leadTimeDays"), 7)),
       category_id: String(formData.get("categoryId") || "").trim() || null,
       is_active: formData.get("isActive") === "on",
@@ -197,4 +223,63 @@ export async function addProductPhoto(formData) {
   if (error) throw new Error("Gagal menyimpan foto");
 
   revalidatePath(`/admin/produk/${productId}`);
+  return photos;
+}
+
+export async function addProductPhotos(formData) {
+  const supabase = await requireAdmin();
+  const productId = String(formData.get("productId") || "").trim();
+  const pathsRaw = formData.get("paths");
+
+  let paths = [];
+  if (typeof pathsRaw === "string") {
+    try {
+      paths = JSON.parse(pathsRaw);
+    } catch {
+      paths = [];
+    }
+  } else if (Array.isArray(pathsRaw)) {
+    paths = pathsRaw;
+  }
+
+  if (!productId || !paths.length) throw new Error("Data foto kosong");
+
+  const { data: product, error: findError } = await supabase
+    .from("products")
+    .select("photos")
+    .eq("id", productId)
+    .maybeSingle();
+  if (findError || !product) throw new Error("Produk tidak ditemukan");
+
+  const currentPhotos = Array.isArray(product.photos) ? product.photos : [];
+  const newPhotos = [...currentPhotos, ...paths.filter((p) => !currentPhotos.includes(p))];
+
+  const { error } = await supabase.from("products").update({ photos: newPhotos }).eq("id", productId);
+  if (error) throw new Error("Gagal menyimpan foto");
+
+  revalidatePath(`/admin/produk/${productId}`);
+  return newPhotos;
+}
+
+export async function removeProductPhoto(formData) {
+  const supabase = await requireAdmin();
+  const productId = String(formData.get("productId") || "").trim();
+  const path = String(formData.get("path") || "").trim();
+  if (!productId || !path) throw new Error("Data foto kosong");
+
+  const { data: product, error: findError } = await supabase
+    .from("products")
+    .select("photos")
+    .eq("id", productId)
+    .maybeSingle();
+  if (findError || !product) throw new Error("Produk tidak ditemukan");
+
+  const currentPhotos = Array.isArray(product.photos) ? product.photos : [];
+  const newPhotos = currentPhotos.filter((p) => p !== path);
+
+  const { error } = await supabase.from("products").update({ photos: newPhotos }).eq("id", productId);
+  if (error) throw new Error("Gagal menghapus foto");
+
+  revalidatePath(`/admin/produk/${productId}`);
+  return newPhotos;
 }

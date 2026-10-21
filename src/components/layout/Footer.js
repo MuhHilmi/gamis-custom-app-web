@@ -1,28 +1,55 @@
-import Link from "next/link";
-import { SITE_NAME, ADMIN_WA_DEFAULT } from "@/lib/constants";
+import { SITE_NAME } from "@/lib/constants";
 
 export default function Footer() {
-  const wa = process.env.NEXT_PUBLIC_ADMIN_WA || ADMIN_WA_DEFAULT;
   return (
-    <footer className="bg-krem-tua text-teks">
-      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm sm:px-6">
-        <p className="font-serif text-lg font-semibold">{SITE_NAME}</p>
-        <nav aria-label="Tautan footer" className="flex flex-wrap gap-x-5 gap-y-1">
-          <a
-            href={`https://wa.me/${wa}`}
-            className="inline-flex min-h-11 items-center underline underline-offset-2 transition duration-200 hover:-translate-y-0.5 hover:text-zaitun-hover"
-          >
-            Hubungi via WhatsApp
-          </a>
-          <Link
-            href="/lacak"
-            className="inline-flex min-h-11 items-center underline underline-offset-2 transition duration-200 hover:-translate-y-0.5 hover:text-zaitun-hover"
-          >
-            Lacak pesanan
-          </Link>
-        </nav>
-        <p>Pengiriman ke Pulau Jawa. Kebijakan pembatalan dan pengembalian menyusul.</p>
+    <>
+      <div className="marquee" aria-hidden="true">
+        <div className="marquee-track">
+          <div className="marquee-group">
+            <span>Gamis custom</span><span>✦</span><span className="o">Ukuran pas</span><span>✦</span><span>Estimasi jelas</span><span>✦</span><span className="o">Kirim se-Jawa</span><span>✦</span>
+          </div>
+          <div className="marquee-group">
+            <span>Gamis custom</span><span>✦</span><span className="o">Ukuran pas</span><span>✦</span><span>Estimasi jelas</span><span>✦</span><span className="o">Kirim se-Jawa</span><span>✦</span>
+          </div>
+        </div>
       </div>
-    </footer>
+
+      <footer className="footer on-dark">
+        <div className="container footer-in">
+          <div className="footer-col brand">
+            <p className="footer-logo">{SITE_NAME}</p>
+            <p>Gamis pria dijahit sesuai ukuranmu, dikirim ke seluruh Pulau Jawa.</p>
+          </div>
+          <div className="footer-col" id="lacak">
+            <h2>Bantuan</h2>
+            <div className="footer-links">
+              <a href="https://wa.me/" target="_blank" rel="noopener noreferrer">Tanya admin lewat WhatsApp</a>
+              <a href="/lacak">Lacak pesanan</a>
+              <a href="#faq">Pertanyaan umum</a>
+            </div>
+          </div>
+          <div className="footer-col">
+            <h2>Kebijakan</h2>
+            <div className="footer-links">
+              <a href="#kebijakan-pengiriman">Kebijakan pengiriman</a>
+              <a href="#kebijakan-pengembalian">Pembatalan dan pengembalian</a>
+            </div>
+          </div>
+          <div className="footer-col">
+            <h2>Pembayaran</h2>
+            <p>Diproses aman lewat Midtrans. Metode pembayaran dipilih saat checkout.</p>
+          </div>
+        </div>
+        <div className="footer-bar">
+          <div className="container footer-bar-in">
+            <p>© 2026 {SITE_NAME}. Seluruh hak dilindungi.</p>
+            <div className="social">
+              <a href="#instagram">Instagram</a>
+              <a href="https://wa.me/" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
   );
 }

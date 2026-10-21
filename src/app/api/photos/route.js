@@ -2,6 +2,7 @@
 // "product-photos". Hanya admin (sesi Supabase Auth + is_admin()) yang boleh.
 // Foto yang dihasilkan berupa kunci objek di bucket, sehingga dapat disimpan
 // ke kolom products.photos dan ditampilkan lewat lib/storage.js.
+// Mendukung multiple files (field "files") dan single file (field "file") untuk backward compat.
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
@@ -15,6 +16,7 @@ const ALLOWED_TYPES = {
 };
 
 const MAX_BYTES = 2 * 1024 * 1024; // 2 MB, sesuai batas bucket
+const MAX_FILES = 10; // batas upload sekaligus
 
 export async function POST(request) {
   // 1. Wajib login.
@@ -38,43 +40,57 @@ export async function POST(request) {
   } catch {
     return NextResponse.json({ error: "Body tidak valid" }, { status: 400 });
   }
-  const file = formData.get("file");
-  if (!(file instanceof File)) {
-    return NextResponse.json({ error: "Berkas foto wajib diisi (field 'file')" }, { status: 400 });
+
+  // Backward compat: terima "files" (multiple) ATAU "file" (single)
+  const filesFromMultiple = formData.getAll("files").filter((f) => f instanceof File && f.size > 0);
+  const fileFromSingle = formData.get("file");
+  const fileFromSingleValid = fileFromSingle instanceof File && fileFromSingle.size > 0;
+
+  const files = fileFromSingleValid ? [fileFromSingle] : filesFromMultiple;
+
+  if (files.length === 0) {
+    return NextResponse.json({ error: "Minimal satu berkas foto wajib diisi (field 'file' atau 'files')" }, { status: 400 });
   }
-  if (file.size === 0) {
-    return NextResponse.json({ error: "Berkas kosong" }, { status: 400 });
-  }
-  if (file.size > MAX_BYTES) {
-    return NextResponse.json({ error: "Ukuran foto melebihi 2 MB" }, { status: 400 });
-  }
-  const extension = ALLOWED_TYPES[file.type];
-  if (!extension) {
-    return NextResponse.json(
-      { error: "Tipe foto tidak didukung. Pakai JPEG, PNG, atau WebP." },
-      { status: 400 }
-    );
+  if (files.length > MAX_FILES) {
+    return NextResponse.json({ error: `Maksimal ${MAX_FILES} foto per upload` }, { status: 400 });
   }
 
-  // 4. Nama berkas aman dan unik, jangan pakai nama asli pengguna.
-  const safeName = `${Date.now()}-${crypto.randomUUID()}.${extension}`;
-  const buffer = await file.arrayBuffer();
+  // 4. Validasi dan upload setiap file.
+  const uploadedPaths = [];
 
-  const { error: uploadError } = await supabase.storage
-    .from("product-photos")
-    .upload(safeName, buffer, {
-      contentType: file.type,
-      cacheControl: "3600",
-      upsert: false,
-    });
+  for (const file of files) {
+    if (file.size > MAX_BYTES) {
+      return NextResponse.json({ error: `File "${file.name}" melebihi 2 MB` }, { status: 400 });
+    }
+    const extension = ALLOWED_TYPES[file.type];
+    if (!extension) {
+      return NextResponse.json(
+        { error: `Tipe "${file.type}" tidak didukung. Pakai JPEG, PNG, atau WebP.` },
+        { status: 400 }
+      );
+    }
 
-  if (uploadError) {
-    console.error("[photos] gagal unggah:", uploadError.message);
-    return NextResponse.json({ error: "Gagal mengunggah foto" }, { status: 500 });
+    const safeName = `${Date.now()}-${crypto.randomUUID()}.${extension}`;
+    const buffer = await file.arrayBuffer();
+
+    const { error: uploadError } = await supabase.storage
+      .from("product-photos")
+      .upload(safeName, buffer, {
+        contentType: file.type,
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("[photos] gagal unggah:", uploadError.message);
+      return NextResponse.json({ error: `Gagal mengunggah "${file.name}"` }, { status: 500 });
+    }
+
+    uploadedPaths.push(safeName);
   }
 
   return NextResponse.json({
-    path: safeName,
-    url: productPhotoUrl(safeName),
+    paths: uploadedPaths,
+    urls: uploadedPaths.map((p) => productPhotoUrl(p)),
   });
 }
