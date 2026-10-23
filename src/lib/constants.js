@@ -1,5 +1,5 @@
 // Data toko sementara (dummy). Ganti sebelum go-live.
-export const SITE_NAME = "Gamis Custom";
+export const SITE_NAME = "TARDA";
 export const SITE_TAGLINE = "Gamis pria dijahit sesuai ukuranmu";
 export const ADMIN_WA_DEFAULT = "6281234567890";
 

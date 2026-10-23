@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createProduct } from "@/actions/products";
+import SizeChartInput from "@/components/admin/SizeChartInput";
+import PhotoUploader from "@/components/admin/PhotoUploader";
 
 export default async function NewProductPage() {
   const supabase = await createClient();
@@ -16,50 +18,57 @@ export default async function NewProductPage() {
     .order("sort_order", { ascending: true });
 
   return (
-    <section className="mx-auto max-w-3xl space-y-6">
+    <section className="mx-auto max-w-4xl space-y-6">
       <h1 className="font-serif text-2xl font-semibold">Tambah produk baru</h1>
-      <form action={createProduct} className="space-y-4 rounded-lg bg-putih p-4 ring-1 ring-garis">
-        <label className="block">
-          <span className="text-sm font-medium">Nama produk</span>
-          <input name="name" required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Slug (opsional, diisi otomatis dari nama)</span>
-          <input name="slug" className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Kategori</span>
-          <select name="categoryId" className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm">
-            <option value="">Tanpa kategori</option>
-            {(categories || []).map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Deskripsi</span>
-          <textarea name="description" rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Info bahan/perawatan</span>
-          <textarea name="materialInfo" rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Harga dasar (Rp)</span>
-          <input name="basePrice" type="number" min="0" required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Lama pengerjaan (hari)</span>
-          <input name="leadTimeDays" type="number" min="1" defaultValue={7} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Foto (path, satu per baris)</span>
-          <textarea name="photos" rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Tabel ukuran (JSON array)</span>
-          <textarea name="sizeChart" rows={4} placeholder='[{"ukuran":"M","lingkar_dada_cm":104}]' className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm font-mono" />
-        </label>
+      <form action={createProduct} className="space-y-6 rounded-lg bg-putih p-4 ring-1 ring-garis">
+        <div className="space-y-4">
+          <label className="block">
+            <span className="text-sm font-medium">Nama produk</span>
+            <input name="name" required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium">Slug (opsional, diisi otomatis dari nama)</span>
+            <input name="slug" className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium">Kategori</span>
+            <select name="categoryId" className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm">
+              <option value="">Tanpa kategori</option>
+              {(categories || []).map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium">Deskripsi</span>
+            <textarea name="description" rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium">Info bahan/perawatan</span>
+            <textarea name="materialInfo" rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+          </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-medium">Harga dasar (Rp)</span>
+              <input name="basePrice" type="number" min="0" required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+            </label>
+            <label className="block">
+              <span className="text-sm font-medium">Lama pengerjaan (hari)</span>
+              <input name="leadTimeDays" type="number" min="1" defaultValue={7} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+            </label>
+          </div>
+        </div>
+
+        <fieldset className="space-y-3 rounded-lg border p-4">
+          <legend className="font-medium">Foto produk</legend>
+          <PhotoUploader productId="" />
+        </fieldset>
+
+        <fieldset className="space-y-3 rounded-lg border p-4">
+          <legend className="font-medium">Tabel ukuran</legend>
+          <SizeChartInput name="sizeChart" />
+        </fieldset>
+
         <label className="flex items-center gap-2 text-sm font-medium">
           <input type="checkbox" name="isActive" defaultChecked className="h-5 w-5" />
           Aktif

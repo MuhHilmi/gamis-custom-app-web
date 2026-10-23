@@ -10,6 +10,29 @@ function value(formData, name) {
   return typeof raw === "string" ? raw : "";
 }
 
+function collectItems(formData, prefix, count, fields) {
+  const items = [];
+  for (let i = 0; i < count; i++) {
+    const item = {};
+    for (const [key, formKey] of Object.entries(fields)) {
+      item[key] = value(formData, `${prefix}${i}${formKey}`);
+    }
+    items.push(item);
+  }
+  return items;
+}
+
+function collectStats(formData, prefix, count) {
+  const stats = [];
+  for (let i = 0; i < count; i++) {
+    stats.push({
+      value: value(formData, `${prefix}${i}Value`),
+      label: value(formData, `${prefix}${i}Label`),
+    });
+  }
+  return stats;
+}
+
 export async function saveLandingConfig(prevState, formData) {
   const supabase = await createClient();
   const { data: claimsData } = await supabase.auth.getClaims();
@@ -23,32 +46,83 @@ export async function saveLandingConfig(prevState, formData) {
       subtitle: value(formData, "heroSubtitle"),
       buttonText: value(formData, "heroButtonText"),
       buttonHref: value(formData, "heroButtonHref"),
-      images: [
-        value(formData, "heroImage1Url") || null,
-        value(formData, "heroImage2Url") || null,
-        value(formData, "heroImage3Url") || null,
-      ],
+      imageUrl: value(formData, "heroImageUrl") || null,
     },
-    catalog: {
-      title: value(formData, "catalogTitle"),
-      showCategoryFilter: formData.get("catalogShowCategoryFilter") === "on",
-      limit: value(formData, "catalogLimit"),
-      sort: value(formData, "catalogSort"),
+    kenapa: {
+      title: value(formData, "kenapaTitle"),
+      subtitle: value(formData, "kenapaSubtitle"),
+      imageUrl: value(formData, "kenapaImageUrl") || null,
+      items: collectItems(formData, "kenapaItem", 4, {
+        title: "Title",
+        text: "Text",
+      }),
     },
-    why: {
-      title: value(formData, "whyTitle"),
-      subtitle: value(formData, "whySubtitle"),
-      imageUrl: value(formData, "whyImageUrl") || null,
-    },
-    howToOrder: {
-      enabled: formData.get("howToOrderEnabled") === "on",
-      title: value(formData, "howToOrderTitle"),
-      subtitle: value(formData, "howToOrderSubtitle"),
+    caraPesan: {
+      enabled: formData.get("caraPesanEnabled") === "on",
+      title: value(formData, "caraPesanTitle"),
       steps: [
-        { t: value(formData, "step1Title"), d: value(formData, "step1Text") },
-        { t: value(formData, "step2Title"), d: value(formData, "step2Text") },
-        { t: value(formData, "step3Title"), d: value(formData, "step3Text") },
+        { num: "01", title: value(formData, "step1Title"), desc: value(formData, "step1Desc") },
+        { num: "02", title: value(formData, "step2Title"), desc: value(formData, "step2Desc") },
+        { num: "03", title: value(formData, "step3Title"), desc: value(formData, "step3Desc") },
       ],
+    },
+    testimoni: {
+      title: value(formData, "testimoniTitle"),
+      items: collectItems(formData, "testimoniItem", 3, {
+        title: "Title",
+        text: "Text",
+        author: "Author",
+        meta: "Meta",
+      }),
+    },
+    faq: {
+      title: value(formData, "faqTitle"),
+      subtitle: value(formData, "faqSubtitle"),
+      items: collectItems(formData, "faqItem", 6, {
+        q: "Q",
+        a: "A",
+      }),
+    },
+    cta: {
+      title: value(formData, "ctaTitle"),
+      subtitle: value(formData, "ctaSubtitle"),
+      buttonText: value(formData, "ctaButtonText"),
+      buttonHref: value(formData, "ctaButtonHref"),
+      waButtonText: value(formData, "ctaWaButtonText"),
+    },
+    koleksiTerbaru: {
+      title: value(formData, "koleksiTerbaruTitle"),
+      items: [
+        {
+          imageUrl: value(formData, "koleksiTerbaruItem0ImageUrl") || null,
+          caption: value(formData, "koleksiTerbaruItem0Caption"),
+          href: value(formData, "koleksiTerbaruItem0Href"),
+          tall: value(formData, "koleksiTerbaruItem0Tall") === "true",
+        },
+        {
+          imageUrl: value(formData, "koleksiTerbaruItem1ImageUrl") || null,
+          caption: value(formData, "koleksiTerbaruItem1Caption"),
+          href: value(formData, "koleksiTerbaruItem1Href"),
+          tall: value(formData, "koleksiTerbaruItem1Tall") === "true",
+        },
+        {
+          imageUrl: value(formData, "koleksiTerbaruItem2ImageUrl") || null,
+          caption: value(formData, "koleksiTerbaruItem2Caption"),
+          href: value(formData, "koleksiTerbaruItem2Href"),
+          tall: value(formData, "koleksiTerbaruItem2Tall") === "true",
+        },
+      ],
+    },
+    pilihanBulanIni: {
+      title: value(formData, "pilihanBulanIniTitle"),
+      subtitle: value(formData, "pilihanBulanIniSubtitle"),
+      productName: value(formData, "pilihanBulanIniProductName"),
+      description: value(formData, "pilihanBulanIniDescription"),
+      price: value(formData, "pilihanBulanIniPrice"),
+      buttonText: value(formData, "pilihanBulanIniButtonText"),
+      buttonHref: value(formData, "pilihanBulanIniButtonHref"),
+      imageUrl: value(formData, "pilihanBulanIniImageUrl") || null,
+      stats: collectStats(formData, "pilihanBulanIniStat", 3),
     },
     contact: {
       whatsappPhone: normalizeWaPhone(value(formData, "contactPhone")) || null,

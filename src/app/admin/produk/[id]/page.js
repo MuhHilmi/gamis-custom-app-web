@@ -2,8 +2,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { updateProduct, addOption, updateOption, deleteOption } from "@/actions/products";
-import { productPhotoUrl } from "@/lib/storage";
 import PhotoUploader from "@/components/admin/PhotoUploader";
+import SizeChartInput from "@/components/admin/SizeChartInput";
 
 const TYPES = ["ukuran", "bahan", "warna"];
 
@@ -35,50 +35,56 @@ export default async function EditProductPage({ params }) {
       <h1 className="font-serif text-2xl font-semibold">Edit produk: {product.name}</h1>
 
       {/* Edit produk */}
-      <form action={updateProduct} className="space-y-4 rounded-lg bg-putih p-4 ring-1 ring-garis">
+      <form action={updateProduct} className="space-y-6 rounded-lg bg-putih p-4 ring-1 ring-garis">
         <input type="hidden" name="id" value={product.id} />
-        <label className="block">
-          <span className="text-sm font-medium">Nama</span>
-          <input name="name" defaultValue={product.name} required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Slug</span>
-          <input name="slug" defaultValue={product.slug} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Kategori</span>
-          <select name="categoryId" defaultValue={product.category_id || ""} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm">
-            <option value="">Tanpa kategori</option>
-            {(categories || []).map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Deskripsi</span>
-          <textarea name="description" defaultValue={product.description || ""} rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Info bahan/perawatan</span>
-          <textarea name="materialInfo" defaultValue={product.material_info || ""} rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Harga dasar (Rp)</span>
-          <input name="basePrice" type="number" min="0" defaultValue={product.base_price} required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Lama pengerjaan (hari)</span>
-          <input name="leadTimeDays" type="number" min="1" defaultValue={product.lead_time_days || 7} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <label className="block">
-          <span className="text-sm font-medium">Foto (path, satu per baris)</span>
-          <textarea name="photos" defaultValue={(product.photos || []).join("\n")} rows={4} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
-        </label>
-        <PhotoUploader productId={product.id} />
-        <label className="block">
-          <span className="text-sm font-medium">Tabel ukuran (JSON array)</span>
-          <textarea name="sizeChart" defaultValue={product.size_chart ? JSON.stringify(product.size_chart, null, 2) : ""} rows={6} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm font-mono" />
-        </label>
+        <div className="space-y-4">
+          <label className="block">
+            <span className="text-sm font-medium">Nama</span>
+            <input name="name" defaultValue={product.name} required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium">Slug</span>
+            <input name="slug" defaultValue={product.slug} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium">Kategori</span>
+            <select name="categoryId" defaultValue={product.category_id || ""} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm">
+              <option value="">Tanpa kategori</option>
+              {(categories || []).map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium">Deskripsi</span>
+            <textarea name="description" defaultValue={product.description || ""} rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+          </label>
+          <label className="block">
+            <span className="text-sm font-medium">Info bahan/perawatan</span>
+            <textarea name="materialInfo" defaultValue={product.material_info || ""} rows={3} className="mt-1 block w-full rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+          </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block">
+              <span className="text-sm font-medium">Harga dasar (Rp)</span>
+              <input name="basePrice" type="number" min="0" defaultValue={product.base_price} required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+            </label>
+            <label className="block">
+              <span className="text-sm font-medium">Lama pengerjaan (hari)</span>
+              <input name="leadTimeDays" type="number" min="1" defaultValue={product.lead_time_days || 7} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+            </label>
+          </div>
+        </div>
+
+        <fieldset className="space-y-3 rounded-lg border p-4">
+          <legend className="font-medium">Foto produk</legend>
+          <PhotoUploader productId={product.id} initialPhotos={product.photos || []} />
+        </fieldset>
+
+        <fieldset className="space-y-3 rounded-lg border p-4">
+          <legend className="font-medium">Tabel ukuran</legend>
+          <SizeChartInput name="sizeChart" initialData={product.size_chart || []} />
+        </fieldset>
+
         <label className="flex items-center gap-2 text-sm font-medium">
           <input type="checkbox" name="isActive" defaultChecked={product.is_active} className="h-5 w-5" />
           Aktif
@@ -90,19 +96,6 @@ export default async function EditProductPage({ params }) {
           Simpan perubahan
         </button>
       </form>
-
-      {/* Galeri kecil */}
-      {Array.isArray(product.photos) && product.photos.length > 0 ? (
-        <div className="flex flex-wrap gap-2">
-          {product.photos.map((path, index) => {
-            const url = productPhotoUrl(path);
-            return url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={`${path}-${index}`} src={url} alt="foto produk" className="h-20 w-16 rounded object-cover" />
-            ) : null;
-          })}
-        </div>
-      ) : null}
 
       {/* Opsi */}
       <section className="space-y-6">
