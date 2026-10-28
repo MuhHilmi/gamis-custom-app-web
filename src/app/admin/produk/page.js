@@ -33,7 +33,7 @@ export default async function AdminProductsPage({ searchParams }) {
 
   return (
     <section className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-serif text-2xl font-semibold">Produk</h1>
         <Link
           href="/admin/produk/baru"
@@ -49,31 +49,31 @@ export default async function AdminProductsPage({ searchParams }) {
         </p>
       ) : (
         <div className="overflow-x-auto rounded-lg ring-1 ring-garis">
-          <table className="min-w-full text-sm">
-            <thead className="bg-krem-tua text-left">
+          <table className="w-full min-w-[720px] text-sm">
+            <thead className="bg-zaitun text-left text-krem">
               <tr>
-                <th className="px-3 py-2 font-semibold">Foto</th>
+                <th className="px-3 py-2 text-krem font-semibold">Foto</th>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("name")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("name")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Nama{sortIndicator("name")}
                   </Link>
                 </th>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("base_price")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("base_price")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Harga dasar{sortIndicator("base_price")}
                   </Link>
                 </th>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("lead_time_days")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("lead_time_days")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Pengerjaan{sortIndicator("lead_time_days")}
                   </Link>
                 </th>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("is_active")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("is_active")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Status{sortIndicator("is_active")}
                   </Link>
                 </th>
-                <th className="px-3 py-2 font-semibold">Aksi</th>
+                <th className="px-3 py-2 text-krem font-semibold">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -98,7 +98,7 @@ export default async function AdminProductsPage({ searchParams }) {
                     <td className="px-3 py-2">
                       <Link
                         href={`/admin/produk/${product.id}`}
-                        className="inline-flex min-h-9 items-center rounded-lg bg-zaitun px-3 py-1.5 text-sm font-medium text-krem transition hover:bg-zaitun-hover focus-visible:outline-krem"
+                        className="inline-flex min-h-11 items-center rounded-lg bg-zaitun px-3 py-1.5 text-sm font-medium text-krem transition hover:bg-zaitun-hover focus-visible:outline-krem"
                       >
                         Edit
                       </Link>

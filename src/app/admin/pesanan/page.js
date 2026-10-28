@@ -53,16 +53,16 @@ export default async function AdminOrdersPage({ searchParams }) {
     <section className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="font-serif text-2xl font-semibold">Pesanan masuk</h1>
-        <form method="GET" action="/admin/pesanan" className="flex gap-2">
+        <form method="GET" action="/admin/pesanan" className="flex w-full gap-2 sm:w-auto">
           <input
             name="q"
             defaultValue={q}
             placeholder="Cari kode, nama, HP"
-            className="min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm"
+            className="min-h-11 min-w-0 flex-1 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm sm:flex-none"
           />
           <button
             type="submit"
-            className="inline-flex min-h-11 items-center rounded-lg bg-zaitun px-4 text-sm font-semibold text-krem hover:bg-zaitun-hover"
+            className="inline-flex min-h-11 shrink-0 items-center rounded-lg bg-zaitun px-4 text-sm font-semibold text-krem hover:bg-zaitun-hover"
           >
             Cari
           </button>
@@ -75,35 +75,35 @@ export default async function AdminOrdersPage({ searchParams }) {
         </p>
       ) : (
         <div className="overflow-x-auto rounded-lg ring-1 ring-garis">
-          <table className="min-w-full text-sm">
-            <thead className="bg-krem-tua text-left">
+          <table className="w-full min-w-[720px] text-sm">
+            <thead className="bg-zaitun text-left text-krem">
               <tr>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("code")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("code")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Kode{sortIndicator("code")}
                   </Link>
                 </th>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("customer_name")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("customer_name")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Nama{sortIndicator("customer_name")}
                   </Link>
                 </th>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("status")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("status")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Status{sortIndicator("status")}
                   </Link>
                 </th>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("total")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("total")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Total{sortIndicator("total")}
                   </Link>
                 </th>
                 <th className="px-3 py-2 font-semibold">
-                  <Link href={sortHref("created_at")} className="inline-flex items-center gap-1 hover:underline">
+                  <Link href={sortHref("created_at")} className="inline-flex items-center gap-1 text-krem hover:text-krem hover:underline">
                     Tanggal{sortIndicator("created_at")}
                   </Link>
                 </th>
-                <th className="px-3 py-2 font-semibold">Aksi</th>
+                <th className="px-3 py-2 text-krem font-semibold">Aksi</th>
               </tr>
             </thead>
             <tbody>
@@ -123,7 +123,7 @@ export default async function AdminOrdersPage({ searchParams }) {
                   <td className="px-3 py-2">
                     <Link
                       href={`/admin/pesanan/${order.id}`}
-                      className="inline-flex min-h-9 items-center rounded-lg bg-zaitun px-3 py-1.5 text-sm font-medium text-krem transition hover:bg-zaitun-hover focus-visible:outline-krem"
+                      className="inline-flex min-h-11 items-center rounded-lg bg-zaitun px-3 py-1.5 text-sm font-medium text-krem transition hover:bg-zaitun-hover focus-visible:outline-krem"
                     >
                       Detail
                     </Link>

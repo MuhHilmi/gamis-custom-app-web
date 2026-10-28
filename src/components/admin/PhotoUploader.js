@@ -62,7 +62,7 @@ export default function PhotoUploader({ productId, initialPhotos = [] }) {
           multiple
           onChange={handleUpload}
           disabled={uploading}
-          className="mt-2 block w-full text-sm border p-2 rounded-md bg-zaitun hover:bg-zaitun-hover text-krem cursor-pointer"
+          className="mt-2 block min-h-11 w-full cursor-pointer rounded-md border bg-zaitun p-2 text-sm text-krem hover:bg-zaitun-hover"
         />
       </label>
 
@@ -84,7 +84,8 @@ export default function PhotoUploader({ productId, initialPhotos = [] }) {
               <button
                 type="button"
                 onClick={() => handleRemove(path)}
-                className="absolute -top-2 -right-2 hidden group-hover:block rounded-full bg-merah/90 p-1 text-xs text-krem hover:bg-merah"
+                aria-label={`Hapus foto ${index + 1}`}
+                className="absolute -top-2 -right-2 inline-flex h-10 w-10 items-center justify-center rounded-full bg-merah/95 text-sm text-krem shadow-md transition hover:bg-merah focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-krem"
                 title="Hapus foto"
               >
                 ✕

@@ -27,7 +27,7 @@ export default async function EditProductPage({ params }) {
   return (
     <section className="space-y-8">
       <nav>
-        <Link href="/admin/produk" className="text-sm font-medium text-zaitun hover:underline">
+        <Link href="/admin/produk" className="inline-flex min-h-11 items-center text-sm font-medium text-zaitun hover:underline">
           ← Kembali ke daftar produk
         </Link>
       </nav>
@@ -126,7 +126,7 @@ export default async function EditProductPage({ params }) {
               <input name="swatchHex" placeholder="#2f4a3a" className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-3 py-2 text-sm" />
             </label>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <label className="text-xs font-medium">
               Urutan
               <input name="sortOrder" type="number" defaultValue="0" className="ml-2 w-20 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
@@ -159,23 +159,38 @@ export default async function EditProductPage({ params }) {
                 >
                   <input type="hidden" name="id" value={option.id} />
                   <input type="hidden" name="productId" value={product.id} />
-                  <select name="type" defaultValue={option.type} className="min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm">
-                    {TYPES.map((t) => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </select>
-                  <input name="name" defaultValue={option.name} required className="min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
-                  <input name="priceDelta" type="number" min="0" defaultValue={option.price_delta} className="min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
-                  <input name="swatchHex" defaultValue={option.swatch_hex || ""} className="min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
-                  <input name="sortOrder" type="number" defaultValue={option.sort_order} className="min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
-                  <div className="flex items-center gap-2">
+                  <label className="block">
+                    <span className="text-xs font-medium">Tipe</span>
+                    <select name="type" defaultValue={option.type} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm">
+                      {TYPES.map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-medium">Nama</span>
+                    <input name="name" defaultValue={option.name} required className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-medium">Tambahan harga</span>
+                    <input name="priceDelta" type="number" min="0" defaultValue={option.price_delta} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-medium">Swatch warna</span>
+                    <input name="swatchHex" defaultValue={option.swatch_hex || ""} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
+                  </label>
+                  <label className="block">
+                    <span className="text-xs font-medium">Urutan</span>
+                    <input name="sortOrder" type="number" defaultValue={option.sort_order} className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-2 py-1 text-sm" />
+                  </label>
+                  <div className="flex flex-wrap items-center gap-2">
                     <label className="flex items-center gap-1 text-xs">
                       <input type="checkbox" name="isActive" defaultChecked={option.is_active} className="h-4 w-4" />
                       Aktif
                     </label>
                     <button
                       type="submit"
-                      className="rounded-lg bg-zaitun px-3 py-2 text-xs font-semibold text-krem hover:bg-zaitun-hover"
+                      className="inline-flex min-h-11 items-center rounded-lg bg-zaitun px-3 text-xs font-semibold text-krem hover:bg-zaitun-hover"
                     >
                       Simpan
                     </button>
@@ -184,11 +199,10 @@ export default async function EditProductPage({ params }) {
                       formAction={deleteOption}
                       name="id"
                       value={option.id}
-                      className="rounded-lg bg-merah px-3 py-2 text-xs font-semibold text-krem hover:opacity-90"
+                      className="inline-flex min-h-11 items-center rounded-lg bg-merah px-3 text-xs font-semibold text-krem hover:opacity-90"
                     >
                       Hapus
                     </button>
-                    <input type="hidden" name="productId" value={product.id} />
                   </div>
                 </form>
               ))}

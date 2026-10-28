@@ -67,7 +67,7 @@ export default async function AdminShippingPage() {
               Aktif
             </label>
             <div className="flex items-center gap-2">
-              <button type="submit" className="rounded-lg bg-zaitun px-3 py-2 text-xs font-semibold text-krem hover:bg-zaitun-hover">
+              <button type="submit" className="inline-flex min-h-11 items-center rounded-lg bg-zaitun px-3 text-xs font-semibold text-krem hover:bg-zaitun-hover">
                 Simpan
               </button>
               <button
@@ -75,7 +75,7 @@ export default async function AdminShippingPage() {
                 formAction={deleteShippingZone}
                 name="id"
                 value={zone.id}
-                className="rounded-lg bg-merah px-3 py-2 text-xs font-semibold text-krem hover:opacity-90"
+                className="inline-flex min-h-11 items-center rounded-lg bg-merah px-3 text-xs font-semibold text-krem hover:opacity-90"
               >
                 Hapus
               </button>
