@@ -48,14 +48,8 @@ img, svg {
   max-width: 100%;
 }
 
-a {
-  color: var(--color-krem);
-}
-
-a:hover {
-  color: var(--color-krem-tua);
-}
-
+/* Warna anchor sengaja tidak diatur global. Aturan unlayered di sini akan
+   mengalahkan utility Tailwind text-* yang berada di @layer utilities. */
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible {
