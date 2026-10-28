@@ -153,7 +153,7 @@ export default function CartPage() {
                   <h2 className="line-clamp-2 font-serif text-base font-semibold leading-snug">
                     <Link
                       href={`/produk/${item.productSlug}`}
-                      className="hover:text-zaitun hover:underline"
+                      className="text-teks hover:text-zaitun hover:underline"
                     >
                       {item.productName}
                     </Link>

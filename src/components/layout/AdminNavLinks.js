@@ -57,7 +57,7 @@ export default function AdminNavLinks() {
               href={item.href}
               aria-current={active ? "page" : undefined}
               className={
-                "inline-flex min-h-11 items-center rounded-lg px-3 transition " +
+                "inline-flex min-h-11 items-center rounded-lg px-3 text-krem transition " +
                 (active ? "bg-zaitun-hover font-semibold" : "hover:bg-zaitun-hover")
               }
             >
@@ -101,7 +101,7 @@ export default function AdminNavLinks() {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={
-                    "flex min-h-11 items-center px-4 text-sm transition " +
+                    "flex min-h-11 items-center px-4 text-sm text-krem transition " +
                     (active
                       ? "bg-zaitun-hover font-semibold"
                       : "hover:bg-zaitun-hover")
