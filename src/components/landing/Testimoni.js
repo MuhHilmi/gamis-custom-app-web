@@ -26,16 +26,28 @@ export default function Testimoni({ title, items }) {
     <section id="testimoni" className="container section">
       <h2 className="h-display h-section">{title}</h2>
       <div className="quotes">
-        {displayItems.map((t, index) => (
-          <figure key={index} className="quote">
-            <p className="t">{t.title}</p>
-            <blockquote>{t.text}</blockquote>
-            <figcaption>
-              {t.author}
-              <span>{t.meta}</span>
-            </figcaption>
-          </figure>
-        ))}
+        {displayItems.map((t, index) => {
+          const initial = (t.author || "?").trim().charAt(0).toUpperCase();
+
+          return (
+            <figure key={index} className="quote">
+              <span className="quote-mark" aria-hidden="true">
+                &ldquo;
+              </span>
+              <p className="t">{t.title}</p>
+              <blockquote>{t.text}</blockquote>
+              <figcaption>
+                <span className="quote-avatar" aria-hidden="true">
+                  {initial}
+                </span>
+                <span className="quote-author">
+                  <strong>{t.author}</strong>
+                  <span>{t.meta}</span>
+                </span>
+              </figcaption>
+            </figure>
+          );
+        })}
       </div>
     </section>
   );

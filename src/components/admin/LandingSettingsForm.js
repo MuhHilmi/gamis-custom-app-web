@@ -123,7 +123,7 @@ export default function LandingSettingsForm({ config }) {
                   {heroImagePath && <button type="button" onClick={() => setHeroImagePath("")} className="inline-flex min-h-11 items-center rounded-lg border border-merah px-3 py-2 text-sm font-medium text-merah hover:bg-merah-bg">Hapus</button>}
                 </div>
                 {heroUploadError && <p className="text-xs text-merah">{heroUploadError}</p>}
-                {heroImagePath && <p className="text-xs text-teks-sekunder">Path: {heroImagePath}</p>}
+                {heroImagePath && <p className="break-all text-xs text-teks-sekunder">Path: {heroImagePath}</p>}
               </div>
             </div>
             <input type="hidden" name="heroImageUrl" value={heroImagePath || ""} />
@@ -210,7 +210,7 @@ export default function LandingSettingsForm({ config }) {
                         )}
                       </div>
                       {koleksiUploadErrors[index] && <p className="text-xs text-merah">{koleksiUploadErrors[index]}</p>}
-                      {koleksiImagePaths[index] && <p className="text-xs text-teks-sekunder">Path: {koleksiImagePaths[index]}</p>}
+                      {koleksiImagePaths[index] && <p className="break-all text-xs text-teks-sekunder">Path: {koleksiImagePaths[index]}</p>}
                     </div>
                   </div>
                   <input type="hidden" name={`koleksiTerbaruItem${index}ImageUrl`} value={koleksiImagePaths[index] || ""} />
@@ -254,7 +254,7 @@ export default function LandingSettingsForm({ config }) {
                   {kenapaImagePath && <button type="button" onClick={() => setKenapaImagePath("")} className="inline-flex min-h-11 items-center rounded-lg border border-merah px-3 py-2 text-sm font-medium text-merah hover:bg-merah-bg">Hapus</button>}
                 </div>
                 {kenapaUploadError && <p className="text-xs text-merah">{kenapaUploadError}</p>}
-                {kenapaImagePath && <p className="text-xs text-teks-sekunder">Path: {kenapaImagePath}</p>}
+                {kenapaImagePath && <p className="break-all text-xs text-teks-sekunder">Path: {kenapaImagePath}</p>}
               </div>
             </div>
             <input type="hidden" name="kenapaImageUrl" value={kenapaImagePath || ""} />
@@ -397,7 +397,7 @@ export default function LandingSettingsForm({ config }) {
             </label>
             <label className="block">
               <span className="text-sm font-medium">Tautan tombol</span>
-              <input name="pilihanBulanIniButtonHref" defaultValue={config.pilihanBulanIni.buttonHref} placeholder="#produk" className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
+              <input name="pilihanBulanIniButtonHref" defaultValue={config.pilihanBulanIni.buttonHref} placeholder="#pilih-model" className="mt-1 block w-full min-h-11 rounded-lg border border-garis-input bg-putih px-4 py-2 text-sm" />
             </label>
           </div>
 
@@ -437,7 +437,7 @@ export default function LandingSettingsForm({ config }) {
                   {pilihanBulanIniImagePath && <button type="button" onClick={() => setPilihanBulanIniImagePath("")} className="inline-flex min-h-11 items-center rounded-lg border border-merah px-3 py-2 text-sm font-medium text-merah hover:bg-merah-bg">Hapus</button>}
                 </div>
                 {pilihanBulanIniUploadError && <p className="text-xs text-merah">{pilihanBulanIniUploadError}</p>}
-                {pilihanBulanIniImagePath && <p className="text-xs text-teks-sekunder">Path: {pilihanBulanIniImagePath}</p>}
+                {pilihanBulanIniImagePath && <p className="break-all text-xs text-teks-sekunder">Path: {pilihanBulanIniImagePath}</p>}
               </div>
             </div>
             <input type="hidden" name="pilihanBulanIniImageUrl" value={pilihanBulanIniImagePath || ""} />

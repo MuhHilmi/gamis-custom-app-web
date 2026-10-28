@@ -51,7 +51,7 @@ export default function SizeChartInput({ name = "sizeChart", initialData = [] })
   return (
     <div className="space-y-4">
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[800px] text-sm">
           <thead>
             <tr className="bg-zaitun/5 text-left">
               <th className="w-8 px-2 py-1 font-medium text-center">#</th>
@@ -60,7 +60,7 @@ export default function SizeChartInput({ name = "sizeChart", initialData = [] })
                   {col.label}
                 </th>
               ))}
-              <th className="w-24 px-2 py-1 font-medium text-center">Aksi</th>
+              <th className="w-36 px-2 py-1 font-medium text-center">Aksi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-garis">
@@ -88,7 +88,8 @@ export default function SizeChartInput({ name = "sizeChart", initialData = [] })
                       <button
                         type="button"
                         onClick={() => moveRow(index, -1)}
-                        className="p-1 text-teks-sekunder hover:text-zaitun"
+                        aria-label={`Naikkan baris ${index + 1}`}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-teks-sekunder transition hover:bg-zaitun/10 hover:text-zaitun"
                         title="Naikkan"
                       >
                         ▲
@@ -98,7 +99,8 @@ export default function SizeChartInput({ name = "sizeChart", initialData = [] })
                       <button
                         type="button"
                         onClick={() => moveRow(index, 1)}
-                        className="p-1 text-teks-sekunder hover:text-zaitun"
+                        aria-label={`Turunkan baris ${index + 1}`}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-teks-sekunder transition hover:bg-zaitun/10 hover:text-zaitun"
                         title="Turunkan"
                       >
                         ▼
@@ -108,7 +110,8 @@ export default function SizeChartInput({ name = "sizeChart", initialData = [] })
                       <button
                         type="button"
                         onClick={() => removeRow(index)}
-                        className="p-1 text-merah hover:opacity-70"
+                        aria-label={`Hapus baris ${index + 1}`}
+                        className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-merah transition hover:bg-merah-bg"
                         title="Hapus baris"
                       >
                         ✕
@@ -122,11 +125,11 @@ export default function SizeChartInput({ name = "sizeChart", initialData = [] })
         </table>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
           onClick={addRow}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-garis-input bg-zaitun text-krem hover:bg-zaitun-hover px-3 py-2 text-sm font-medium"
+          className="inline-flex min-h-11 items-center gap-1.5 rounded-lg border border-garis-input bg-zaitun px-3 py-2 text-sm font-medium text-krem hover:bg-zaitun-hover"
         >
           <span className="text-lg leading-none">+</span> Tambah ukuran
         </button>

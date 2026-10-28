@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { productPhotoUrl } from "@/lib/storage";
@@ -8,14 +6,19 @@ import GamisSvg from "@/components/landing/GamisSvg";
 export default function Hero({ title, subtitle, buttonText, buttonHref, imageUrl }) {
   const imageSrc = imageUrl ? productPhotoUrl(imageUrl) : null;
 
+  // Judul dari pengaturan admin ditampilkan apa adanya, dengan kata terakhir
+  // diberi aksen seperti desain awal ("... ukuranmu").
+  const words = title.trim().split(/\s+/);
+  const accentWord = words.length > 1 ? words[words.length - 1] : null;
+  const leadText = accentWord ? words.slice(0, -1).join(" ") : title;
+
   return (
     <section className="hero" id="atas">
       <div className="container hero-in">
         <div className="hero-text">
           <h1 className="h-display">
-            <span>Gamis pria</span>
-            <span>sesuai</span>
-            <span className="accent">ukuranmu</span>
+            <span>{leadText}</span>
+            {accentWord && <span className="accent">{accentWord}</span>}
           </h1>
           <p>{subtitle}</p>
           <div className="hero-cta">
@@ -31,7 +34,7 @@ export default function Hero({ title, subtitle, buttonText, buttonHref, imageUrl
             </Link>
           </div>
         </div>
-        <div className="hero-art">
+        <div className={`hero-art${imageSrc ? " hero-art-photo" : ""}`}>
           {imageSrc ? (
             <div className="relative aspect-[4/5] max-w-md mx-auto">
               <Image

@@ -49,11 +49,11 @@ img, svg {
 }
 
 a {
-  color: var(--color-zaitun);
+  color: var(--color-krem);
 }
 
 a:hover {
-  color: var(--color-zaitun-hover);
+  color: var(--color-krem-tua);
 }
 
 a:focus-visible,
@@ -220,6 +220,10 @@ summary:focus-visible {
   text-transform: uppercase;
 }
 
+.site-header {
+  position: relative;
+}
+
 .header-in {
   display: flex;
   flex-wrap: wrap;
@@ -228,6 +232,86 @@ summary:focus-visible {
   gap: 12px;
   padding-top: 12px;
   padding-bottom: 12px;
+}
+
+.header-end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-teks);
+  cursor: pointer;
+}
+
+.nav-toggle:hover {
+  background: var(--color-krem-tua);
+}
+
+.nav-toggle svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  background: var(--color-krem);
+  border-bottom: 2px solid var(--color-teks);
+  box-shadow: 0 12px 24px rgba(27, 38, 32, 0.12);
+}
+
+.mobile-menu nav {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 16px;
+}
+
+.mobile-menu a {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  border-bottom: 1px solid var(--color-garis);
+  color: var(--color-teks);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.mobile-menu a:last-child {
+  border-bottom: 0;
+}
+
+.mobile-menu a:hover {
+  text-decoration: underline;
 }
 
 .logo {
@@ -293,6 +377,7 @@ summary:focus-visible {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: 40px;
   padding-top: 40px;
   padding-bottom: 56px;
@@ -365,6 +450,11 @@ summary:focus-visible {
   max-width: 560px;
   position: relative;
   height: 480px;
+}
+
+/* Foto hero mengikuti rasio 4:5, bukan tinggi tetap milik placeholder. */
+.hero-art.hero-art-photo {
+  height: auto;
 }
 
 .hero-art .b1 {
@@ -850,41 +940,100 @@ summary:focus-visible {
 
 /* testimoni */
 .quotes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 32px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
   margin-top: 40px;
 }
 
 .quote {
-  flex: 1 1 280px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   margin: 0;
-  text-align: center;
+  padding: 28px 24px 24px;
+  overflow: hidden;
+  background: var(--color-putih);
+  border: 2px solid var(--color-teks);
+  border-radius: 8px;
+  text-align: left;
+}
+
+.quote-mark {
+  position: absolute;
+  top: 8px;
+  right: 18px;
+  color: var(--color-emas);
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0.65;
+  pointer-events: none;
 }
 
 .quote .t {
-  margin: 0 0 8px;
+  position: relative;
+  margin: 0 0 10px;
+  padding-right: 44px;
   font-weight: 700;
   font-size: 13px;
   letter-spacing: 0.08em;
+  line-height: 1.4;
   text-transform: uppercase;
 }
 
 .quote blockquote {
-  margin: 0 0 16px;
+  margin: 0 0 22px;
   color: var(--color-teks-sekunder);
+  font-size: 15px;
+  line-height: 1.65;
 }
 
 .quote figcaption {
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-garis);
   font-size: 14px;
 }
 
-.quote figcaption span {
-  display: block;
-  font-weight: 400;
+.quote-avatar {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-zaitun);
+  color: var(--color-krem);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.quote-author {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.quote-author strong {
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.quote-author span {
   color: var(--color-teks-sekunder);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
 }
 
 /* faq */
@@ -1087,10 +1236,73 @@ details p {
   color: var(--color-krem);
 }
 
+@media (max-width: 767px) {
+  .nav {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .mobile-menu {
+    display: block;
+  }
+
+  .section {
+    padding-top: 52px;
+    padding-bottom: 52px;
+  }
+
+  .hero-in {
+    gap: 28px;
+  }
+
+  .tile.tall .ph {
+    height: 420px;
+  }
+
+  .badge {
+    width: 96px;
+    height: 96px;
+  }
+
+  .badge svg.ring {
+    width: 96px;
+    height: 96px;
+  }
+
+  .badge .core {
+    width: 38px;
+    height: 38px;
+    margin: -19px 0 0 -19px;
+  }
+
+  .badge .core svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .collage,
+  .collage .side {
+    gap: 16px;
+  }
+}
+
 @media (max-width: 480px) {
   .hero-art {
     height: 380px;
   }
+
+  .tile.tall .ph {
+    height: 360px;
+  }
+
+  .section {
+    padding-top: 44px;
+    padding-bottom: 44px;
+  }
+
   .marquee-group span {
     font-size: 30px;
   }

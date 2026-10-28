@@ -119,7 +119,7 @@ export const DEFAULT_LANDING_CONFIG = {
       "Bahan premium dengan potongan modern, cocok untuk acara formal dan semi-formal. Tersedia dalam berbagai pilihan warna klasik dan kontemporer.",
     price: "Mulai Rp 650.000",
     buttonText: "Lihat dan pesan",
-    buttonHref: "#produk",
+    buttonHref: "#pilih-model",
     imageUrl: null,
     stats: [
       { value: "7–14", label: "Hari pengerjaan" },
@@ -224,6 +224,13 @@ export function normalizeLandingConfig(raw) {
   // Backward compat: migrate old 'why' to 'kenapa'
   const whySource = isObject(source.why) ? source.why : {};
 
+  // Backward compat: pengaturan lama menunjuk ke "#produk" yang tidak ada.
+  // Arahkan ke bagian katalog yang benar tanpa mengubah data tersimpan.
+  const pilihanButtonHref = pickString(
+    pilihanBulanIni.buttonHref,
+    DEFAULT_LANDING_CONFIG.pilihanBulanIni.buttonHref
+  );
+
   const normalized = {
     hero: {
       title: pickString(hero.title, DEFAULT_LANDING_CONFIG.hero.title),
@@ -278,7 +285,7 @@ export function normalizeLandingConfig(raw) {
       description: pickString(pilihanBulanIni.description, DEFAULT_LANDING_CONFIG.pilihanBulanIni.description),
       price: pickString(pilihanBulanIni.price, DEFAULT_LANDING_CONFIG.pilihanBulanIni.price),
       buttonText: pickString(pilihanBulanIni.buttonText, DEFAULT_LANDING_CONFIG.pilihanBulanIni.buttonText),
-      buttonHref: pickString(pilihanBulanIni.buttonHref, DEFAULT_LANDING_CONFIG.pilihanBulanIni.buttonHref),
+      buttonHref: pilihanButtonHref === "#produk" ? "#pilih-model" : pilihanButtonHref,
       imageUrl:
         typeof pilihanBulanIni.imageUrl === "string" && pilihanBulanIni.imageUrl.trim()
           ? pilihanBulanIni.imageUrl.trim()

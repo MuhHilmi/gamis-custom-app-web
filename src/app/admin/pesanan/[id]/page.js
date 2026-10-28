@@ -43,7 +43,7 @@ export default async function AdminOrderDetailPage({ params }) {
   return (
     <article className="space-y-6">
       <nav>
-        <Link href="/admin/pesanan" className="text-sm font-medium text-zaitun hover:underline">
+        <Link href="/admin/pesanan" className="inline-flex min-h-11 items-center text-sm font-medium text-zaitun hover:underline">
           ← Kembali ke daftar
         </Link>
       </nav>
@@ -66,25 +66,25 @@ export default async function AdminOrderDetailPage({ params }) {
       {/* Detail penerima */}
       <section className="rounded-lg bg-putih p-4 ring-1 ring-garis">
         <h2 className="font-serif text-lg font-semibold">Data penerima</h2>
-        <dl className="mt-3 space-y-2 text-sm">
-          <div className="flex gap-2">
-            <dt className="w-32 text-teks-sekunder">Nama</dt>
+        <dl className="mt-3 space-y-3 text-sm break-words">
+          <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-2">
+            <dt className="text-teks-sekunder sm:w-32">Nama</dt>
             <dd>{order.customer_name}</dd>
           </div>
-          <div className="flex gap-2">
-            <dt className="w-32 text-teks-sekunder">Nomor HP</dt>
+          <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-2">
+            <dt className="text-teks-sekunder sm:w-32">Nomor HP</dt>
             <dd className="font-mono">{order.customer_phone}</dd>
           </div>
-          <div className="flex gap-2">
-            <dt className="w-32 text-teks-sekunder">Email</dt>
+          <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-2">
+            <dt className="text-teks-sekunder sm:w-32">Email</dt>
             <dd>{order.customer_email}</dd>
           </div>
-          <div className="flex gap-2">
-            <dt className="w-32 text-teks-sekunder">Alamat</dt>
+          <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-2">
+            <dt className="text-teks-sekunder sm:w-32">Alamat</dt>
             <dd>{order.address}</dd>
           </div>
-          <div className="flex gap-2">
-            <dt className="w-32 text-teks-sekunder">Kota/Provinsi</dt>
+          <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-2">
+            <dt className="text-teks-sekunder sm:w-32">Kota/Provinsi</dt>
             <dd>
               {order.city}, {order.province} {order.postal_code ? `(${order.postal_code})` : ""}
             </dd>
